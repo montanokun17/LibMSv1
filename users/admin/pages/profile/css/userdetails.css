@@ -1,0 +1,13 @@
+.infotitle {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .userinfobox {
+    list-style-type: none;
+    padding: 20px;
+  }
+  
+  li {
+    padding: 10px;
+  }

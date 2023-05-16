@@ -1,0 +1,30 @@
+/*MAIN BOX*/
+
+
+.main {
+    font-size: 13px;
+}
+
+.box-item {
+    margin-bottom: 10px;
+}
+    
+.content-box {
+    list-style-type: none;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding: 20px;
+}
+    
+.span-info {
+    padding-bottom: 5px;
+}
+    
+.btn-li {
+    padding-bottom: 10px;
+}
+
+.btn-google {
+    background-image: linear-gradient(to right, #4285F4,#EA4335,#FBBC05,#4285F4,#34A85E,#EA4335);
+}
+    

@@ -1,0 +1,43 @@
+/*Form Start*/
+.dropdown1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 7px;
+    font-size: 13px;
+  }
+  
+  #bsection {
+    margin-right: 10px;
+    padding: 5px;
+    font-size: 12px;
+    width: 20%;
+  }
+
+  #bstatus {
+    padding: 5px;
+    font-size: 12px;
+    width: 10%;
+  }
+
+  ::placeholder {
+    font-size: 12px;
+  }
+  
+  .form-group {
+      padding: 5px;
+      margin: 0 auto;
+      width: 800px;
+      text-align: left; /* Align form labels to the left */
+    }
+    
+    /* Center the form on the page */
+    form {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 5px;
+      font-size: 12px;
+    }
+    /*Form End*/

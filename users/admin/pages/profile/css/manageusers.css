@@ -1,0 +1,36 @@
+
+/*Search Bar*/
+.search {
+    width: 500px;
+    padding: 5px;
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+
+
+/*Table start*/
+.container {
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;;
+}
+
+th, td {
+    padding: 2px;
+    border: 1px solid black;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}

@@ -1,0 +1,32 @@
+/*MAIN BOX*/
+.main {
+  font-size: 12px;
+}
+
+.title {
+    padding-top: 20px;
+    padding-bottom: 10px;
+  }
+
+  
+  .settingsbox {
+    list-style-type: none;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding: 20px;
+  }
+  
+  
+  .settpoint {
+    padding-bottom: 5px;
+  }
+  
+  .btn-sett {
+    padding-bottom: 10px;
+  }
+  
+  .btn {
+    padding: 7px;
+  }
+  
+  

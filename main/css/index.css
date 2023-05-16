@@ -1,0 +1,22 @@
+
+/*MAIN CARD*/
+    .container {
+        align-content: center;
+        text-align: center;
+    }
+
+    .homelogo {
+        margin-top: 25px;
+    }
+
+    body {
+        background-image: url("/LibMS/resources/images/bgpic2.jpg");
+        background-size: cover;
+    }
+
+    #head1 {
+        text-align: center;
+        align-content: center;
+        color: antiquewhite;
+    }
+/*MAIN CARD*/
