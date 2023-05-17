@@ -12,6 +12,7 @@ CREATE TABLE users (
   'password' VARCHAR(50) NOT NULL,
   'acctype' ENUM('admin', 'staff', 'librarian', 'student') NOT NULL,
   'schlvl' ENUM('Elementary', 'Junior High School', 'Senior High School', 'College', 'Graduated') NOT NULL
+  'status' ENUM('Active','Disabled') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --------------------------------------------------------
