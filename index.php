@@ -1,3 +1,5 @@
+<!---->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,16 +8,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to Library Management System!</title>
     <!--Link for Tab ICON-->
-    <link rel="icon" type="image/x-icon" href="/LibMS/resources/images/logov1.png">
+    <link rel="icon" type="image/x-icon" href="/LibMSv1/resources/images/logov1.png">
     <!--Link for Bootstrap-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/resources/bootstrap/css/bootstrap.min.css"/>
-    <script type="text/javascript" src="/LibMS/resources/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/LibMSv1/resources/bootstrap/css/bootstrap.min.css"/>
+    <script type="text/javascript" src="/LibMSv1/resources/bootstrap/js/bootstrap.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/main/css/index.css">
+    <link rel="stylesheet" type="text/css" href="/LibMSv1/main/css/index.css">
     <!--Link for Font Awesome Icons-->
-    <link rel="stylesheet" href="/LibMS/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
+    <link rel="stylesheet" href="/LibMSv1/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
     <!--Link for Google Font-->
-    <link rel="stylesheet" href="/LibMS/resources/fonts/fonts.css"/>
+    <link rel="stylesheet" href="/LibMSv1/resources/fonts/fonts.css"/>
 
 </head>
 
@@ -27,7 +29,7 @@
         <div class="main">
             <div class="homelogo">
             <div class="container">
-                        <img src="/LibMS/resources/images/logov3.png" width="400px" height="400px">
+                        <img src="/LibMSv1/resources/images/logov3.png" width="400px" height="400px">
                 </div>
             </div>
         </div>

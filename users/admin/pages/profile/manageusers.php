@@ -203,6 +203,7 @@
                             <th>Email</th>
                             <th>Contact Number</th>
                             <th>Account Type</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -213,6 +214,7 @@
                             <td>johndoe@example.com</td>
                             <td>555-1234</td>
                             <td>Student</td>
+                            <td>Mock Test</td>
                             <td>
                             
                             <a href="/LibMSv1/users/admin/pages/profile/userdetails.php">
