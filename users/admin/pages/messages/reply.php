@@ -146,7 +146,7 @@
               </a>
           </li>
           <li>
-            <a href="#">
+            <a href="/LibMSv1/users/admin/pages/recents/current_issue.php">
                 <i class="fa fa-book fa-md"></i>
                 <span class="nav-text">
                    Currently Issued Books
@@ -154,7 +154,7 @@
             </a>
         </li>
         <li>
-          <a href="#">
+          <a href="/LibMSv1/users/admin/pages/recents/prev_borrowed.php">
               <i class="fa fa-book fa-md"></i>
               <span class="nav-text">
                  Previously Borrowed Books
@@ -162,7 +162,7 @@
           </a>
       </li>
       <li>
-        <a href="#">
+        <a href="/LibMSv1/users/admin/pages/recents/recent_deletion.php">
             <i class="fa fa-trash fa-md"></i>
             <span class="nav-text">
                Recent Deletion Books

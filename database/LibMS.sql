@@ -7,15 +7,21 @@ USE LibSys;
 CREATE TABLE users (
   'id_no' INT PRIMARY KEY AUTO_INCREMENT,
   'username' VARCHAR(50) NOT NULL,
+  'email' VARCHAR (50) NOT NULL,
   'firstname' VARCHAR(50) NOT NULL,
   'lastname' VARCHAR(50) NOT NULL,
   'password' VARCHAR(50) NOT NULL,
   'acctype' ENUM('admin', 'staff', 'librarian', 'student') NOT NULL,
-  'schlvl' ENUM('Elementary', 'Junior High School', 'Senior High School', 'College', 'Graduated') NOT NULL
+  'schlvl' ENUM('Elementary', 'Junior High School', 'Senior High School', 'College', 'Graduated'),
   'status' ENUM('Active','Disabled') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+);
 
 --------------------------------------------------------
+
+INSERT INTO 'users'('id_no','username','email','firstname','lastname','password','acctype','schlvl','status')
+VALUES ('100001','admin','libsys_01@outlook.com','Admin','Administrator','admin01','admin','','Active'),
+       ('100002','librarian','libsys_01@outlook.com','Librarian','Librarian LibMS','librarian01','librarian','','Active'),
+       ('100003','staff','libsys_01@outlook.com','Staff','Staff LibMS','staff01','staff','','Active');
 
 ----------------------Table for books-------------------
 
@@ -30,7 +36,7 @@ CREATE TABLE books (
   'author' VARCHAR(100) NOT NULL,
   'isbn' VARCHAR(50) NOT NULL,
   'status' ENUM('GOOD', 'DAMAGED', 'LOST', 'DILAPITATED') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+);
 
 ---------------------------------------------------------
 
@@ -41,30 +47,67 @@ CREATE TABLE message (
   'sender' VARCHAR(50) NOT NULL,
   'id_no' INT NOT NULL,
   'msg' TEXT NOT NULL,
-  'Date' Date DATE NOT NULL,
-  'Time' Time TIME NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  'Date' DATE NOT NULL,
+  'time' TIME NOT NULL
+);
+
+CREATE TABLE ChatMessages (
+  'msg_id' INT PRIMARY KEY AUTO_INCREMENT,
+  'sender' VARCHAR(100) NOT NULL,
+  'message' TEXT NOT NULL,
+  'timestamp' DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+SELECT DATE_FORMAT(date_column, '%m-%d-%Y') AS formatted_date,
+       DATE_FORMAT(time_column, '%H:%i:%s') AS formatted_time
+FROM ChatMessages;
 
 ----------------------------------------------------------
 
----------------------Table for records--------------------
+---------------------Table for borrower--------------------
 
-CREATE TABLE `issue` (
-  `record_id` int(11) NOT NULL,
-  `id_no` varchar(255) NOT NULL,
-  `book_id` int(255) NOT NULL,
-  `date_of_issue` date NOT NULL,
-  `due_date` date NOT NULL,
-  `date_of_return` date NOT NULL,
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE 'borrower' (
+`borrower_id` int PRIMARY KEY AUTO_INCREMENT,
+'lastname' VARCHAR(50) NOT NULL,
+'firstname' VARCHAR(50) NOT NULL,
+'username' VARCHAR(50) NOT NULL
+);
+
+----------------------------------------------------------
+
+---------------------Table for borrow--------------------
+
+CREATE TABLE `borrow` (
+  `borrow_id` INT PRIMARY KEY AUTO_INCREMENT,
+  `id_no` VARCHAR(255) NOT NULL,
+  `book_id` INT NOT NULL,
+  `date_of_issue` DATE NOVARCHAR
+  `due_date` DATE NOT NULL,
+  `date_of_return` DATE NOT NULL
+);
 
 ----------------------------------------------------------
 
 -------------------Table for renew------------------------
 
 CREATE TABLE 'renew' (
+  'borrow_id' INT NOT NULL,
+  'borrower_id' INT NOT NULL,
+  `book_id` INT NOT NULL,
+  'username' VARCHAR NOT NULL,
+
+);
+
+----------------------------------------------------------
+
+-----------------------LOGS TABLE-------------------------
+
+CREATE TABLE 'logs' (
+  'log_id' INT PRIMARY KEY AUTO_INCREMENT,
   'id_no' INT NOT NULL,
-  `book_id` int(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  'username' VARCHAR NOT NULL,
+  'action_description' VARCHAR(255) NOT NULL,
+  'timestamp' DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 
 ----------------------------------------------------------

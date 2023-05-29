@@ -1,3 +1,39 @@
+<?php
+ // Assuming you have established a database connection
+require ('../dbconn.php');
+
+session_start();
+
+// Query the database to retrieve the data
+$sql = "SELECT * FROM users WHERE acctype = 'admin'";
+$result = mysqli_query($connection, $sql);
+
+// Check if the query was successful
+if ($result) {
+    // Fetch the row from the result set
+    $row = mysqli_fetch_assoc($result);
+
+    // Assign the database value to a new variable
+    //$variable = $row['column_name'];
+    $id_no = $row['id_no'];
+    $username = $row['username'];
+    $firstname = $row['firstname'];
+    $lastname = $row['lastname'];
+    $acctype = $row['acctype'];
+    $email = $row['email'];
+
+    // Free the result set
+    mysqli_free_result($result);
+} else {
+    // Error occurred while querying the database
+    echo "Error: " . mysqli_error($connection);
+}
+
+// Close the database connection
+mysqli_close($connection);
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -103,7 +139,7 @@
           </li>
             <li class="has-subnav">
                 <a href="/LibMSv1/users/admin/pages/messages/messages.php">
-                   <i class="fa fa-comments fa-md"></i>
+                  <i class=" fa fa-regular fa-envelope fa-md"></i>
                     <span class="nav-text">
                         Messages
                     </span>
@@ -152,7 +188,7 @@
             </a>
         </li>
         <li>
-          <a href="#">
+          <a href="/LibMSv1/users/admin/pages/recents/prev_borrowed.php">
               <i class="fa fa-book fa-md"></i>
               <span class="nav-text">
                  Previously Borrowed Books
@@ -160,7 +196,7 @@
           </a>
       </li>
       <li>
-        <a href="#">
+        <a href="/LibMSv1/users/admin/pages/recents/recent_deletion.php">
             <i class="fa fa-trash fa-md"></i>
             <span class="nav-text">
                Recent Deletion Books
@@ -172,7 +208,7 @@
 
         <ul class="logout">
             <li>
-               <a href="#">
+               <a href="/LibMSv1/index.php">
                      <i class="fa fa-right-from-bracket fa-md"></i>
                     <span class="nav-text">
                         Logout
@@ -181,23 +217,48 @@
             </li>  
         </ul>
     </nav>
+
+    <?php
+
+        // Clear all session variables
+        $_SESSION = array();
+
+        // Destroy the session
+        session_destroy();
+
+        // Redirect the user to the login page
+        header("Location: /LibMS/index.php");
+        exit;
+
+    ?>
+
+    <script>
+      // Disable the back button after logging out
+      history.pushState(null, null, location.href);
+      window.onpopstate = function () {
+          history.go(1);
+      };
+    </script>
+
+
 <!--SIDEBAR END-->
 
     <!--PROFILE CARD START-->
     <div class="profcard">
       <div class="card">
         <img src="/LibMSv1/resources/images/user.png" style="width:100%">
-        <h3>LMS Administrator</h3>
-        <p class="title">ID Number: 010001</p>
-        <p><b><em>Account Role Type: ADMIN</em></b></p>
+        <h3><?php echo $firstname,'',$lastname; ?></h3>
+          <p class="title">ID Number: <?php echo $id_no; ?></p>
+          <p><b><em>Account Role Type: <?php echo $acctype; ?></em></b></p>
         <p class="profinfo">Username: </p>
-        <p><em>admin</em></p>
+          <p><em><?php echo $username; ?></em></p>
         <p class="profinfo">Email: </p>
-        <p><em> </em></p>
+          <p><em><?php echo $email; ?></em></p>
         <p><a href="/LibMSv1/users/admin/pages/profile/admininfo.php"><button>Account Info</button></a></p>
       </div>  
     </div>
     <!--PROFILE CARD END-->
+
 
     <!--MAIN CARD START-->
       

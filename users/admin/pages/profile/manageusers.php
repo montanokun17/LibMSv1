@@ -146,7 +146,7 @@
               </a>
           </li>
           <li>
-            <a href="#">
+            <a href="/LibMSv1/users/admin/pages/recents/current_issue.php">
                 <i class="fa fa-book fa-md"></i>
                 <span class="nav-text">
                    Currently Issued Books
@@ -154,7 +154,7 @@
             </a>
         </li>
         <li>
-          <a href="#">
+          <a href="/LibMSv1/users/admin/pages/recents/prev_borrowed.php">
               <i class="fa fa-book fa-md"></i>
               <span class="nav-text">
                  Previously Borrowed Books
@@ -162,7 +162,7 @@
           </a>
       </li>
       <li>
-        <a href="#">
+        <a href="/LibMSv1/users/admin/pages/recents/recent_deletion.php">
             <i class="fa fa-trash fa-md"></i>
             <span class="nav-text">
                Recent Deletion Books
@@ -195,6 +195,16 @@
                     <input type="text" class="search" placeholder ="Search for ID Number, Name, Username, EMail, Student Type...">
                     <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-search fa-sm"></i> Search</button>
                 </div>
+
+                <label for="account_type" id="dropdown1"><i class="fa-solid fa-filter"></i> <b>Filter Account Types: </b></label>
+                        <select name="acctype" id="acctype">
+                            <option></option>
+                            <option value="admin">Admin</option>
+                            <option value="librarian">Librarian</option>
+                            <option value="staff">Staff</option>
+                            <option value="student">Student</option>
+                        </select>
+
                 <table>
                     <thead>
                         <tr>

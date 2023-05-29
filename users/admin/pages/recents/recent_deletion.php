@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Add Admin, Librarian, Staff Account</title>
+    <title>Admin - Recent Deletion Books</title>
     <!--Link for Tab ICON-->
     <link rel="icon" type="image/x-icon" href="/LibMSv1/resources/images/logov1.png">
     <!--Link for Bootstrap-->
     <link rel="stylesheet" type="text/css" href="/LibMSv1/resources/bootstrap/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/LibMSv1/resources/bootstrap/js/bootstrap.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMSv1/users/admin/pages/profile/css/addaccount.css">
+    <link rel="stylesheet" type="text/css" href="/LibMSv1/users/admin/pages/recents/css/recent_deletion.css">
     <!--Link for NAVBAR and Sidebar CSS File-->
     <link rel="stylesheet" type="text/css" href="/LibMSv1/users/admin/css/navbar-sidebar.css">
     <!--Link for Font Awesome Icons-->
@@ -45,7 +45,6 @@
                 <a class="nav-link" href="/LibMSv1/users/admin/pages/database/database.php"><i class="fa-solid fa-database fa-sm"></i> Database</a>
               </li>
             </ul>
-            
 
             <ul class="navbar-nav ms-auto">
               <li class="nav-item">
@@ -186,62 +185,35 @@
     </nav>
 <!--SIDEBAR END-->
 
-<!--MAIN CARD START-->
-    <div class="form-box">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title"><b>Add Admin, Librarian & Staff Accounts: </b></div>
-                                    <div class="createacc">
-                                        <form action="#" method="post">
-                                            <div class="form-group"><input type="text" Name="firstname" id="firstname" placeholder="First Name" required=""></div>
-                                            <div class="form-group"><input type="text" Name="lastname" id="lastname" placeholder="Last Name" required=""></div>
-                                            <div class="form-group"><input type="text" Name="username" id="username" placeholder="Username" required=""></div>
-                                            <div class="form-group"><input type="text" Name="email" id="email" placeholder="Email" required=""></div>
-                                            <div class="form-group"><input type="password" Name="password" id="password" placeholder="Password" required=""></div>
-                                            <div class="form-group"><input type="password" Name="confirm_password" id="confirm_password" placeholder="Confirm Password" required=""></div>
-                                            <?php
-                                                // validate password and confirm password
-                                                if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                                                    $password = $_POST["password"];
-                                                    $confirm_password = $_POST["confirm_password"];
-                                                    
-                                                    if ($password != $confirm_password) {
-                                                        echo "<p style='color:red;'>Password and confirm password do not match. Please try again.</p>";
-                                                    } else {
-                                                        echo "<p style='color:green;'>Password confirmed.</p>";
-                                                    }
-                                                }
-                                            ?>
-                                            <label for="acctype"><b>Account Type: </b></label>
-                                                <select name="acctype" class="form-select" id="acctype">
-                                                    <option selected></option>
-                                                    <option value="admin">Administrator</option>
-                                                    <option value="librarian">Librarian</option>
-                                                    <option value="staff">Staff</option>
-                                                </select>
-
-                                            <div class="send-button">
-                                                <button type="submit" class="btn btn-primary col-md-12"><i class="fa-solid fa-user-plus"></i> Add Account</button>
-                                            </div>
-                                            <hr>
-                                            <a href="/LibMS/users/admin/pages/profile/profilesetting.php">
-                                                <button type="button" class="btn btn-primary col-md-12">
-                                                    <i class="fa-solid fa-rotate-left fa-sm"></i> Go Back</button>
-                                            </a>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<!--MAIN BOX START-->
+<div class="main">
+    <div class="container">
+        <div class="search-bar">
+            <input type="text" class="search" placeholder ="Enter ID Number, Name, Book Name...here">
+            <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-search fa-sm"></i> Search</button>
         </div>
-    </div>
-<!--MAIN CARD END-->
 
+        <hr>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Issue ID</th>
+                    <th>ISBN</th>
+                    <th>Book Name</th>
+                    <th>Section</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<!--MAIN BOX END-->
 </body>
 </html>

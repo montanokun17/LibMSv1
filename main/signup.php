@@ -1,3 +1,42 @@
+<?php
+// Assuming you have established a database connection
+
+require ('../dbconn.php');
+
+$command = 'python3 id_number.py';
+$id_number = exec($command);
+
+
+// Check if the form is submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Retrieve form data
+    $id_no = $_POST['id_number'];
+    $firstname = $_POST['firstname'];
+    $lastname = $_POST['lastname'];
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $acctype = $_POST['acctype'];
+    $schlvl = $_POST['schlvl'];
+
+    // Prepare and execute the SQL query to insert the data into the table
+    $sql = "INSERT INTO users (username, firstname, lastname, password, acctype, schlvl, status) 
+            VALUES ('$username', '$firstname', '$lastname', '$password', '$acctype', '$schlvl', 'Active')";
+
+if (mysqli_query($connection, $sql)) {
+    // Data insertion successful
+    echo "<script>alert('Account created successfully.');</script>";
+} else {
+    // Error occurred while inserting data
+    echo "<script>alert('Error: " . $sql . "\\n" . mysqli_error($connection) . "');</script>";
+}
+
+
+    // Close the database connection
+    mysqli_close($connection);
+}
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">

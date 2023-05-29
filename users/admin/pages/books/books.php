@@ -69,7 +69,7 @@
 <div class="area"></div><nav class="main-menu">
         <ul>
             <li>
-                <a href="/LibMS/users/admin/index.php">
+                <a href="/LibMSv1/users/admin/index.php">
                     <i class="fa fa-user fa-md"></i>
                     <span class="nav-text">
                        Profile Card
@@ -78,7 +78,7 @@
               
             </li>
             <li>
-              <a href="/LibMS/users/admin/pages/profile/profilesetting.php">
+              <a href="/LibMSv1/users/admin/pages/profile/profilesetting.php">
                   <i class="fa fa-cogs fa-md"></i>
                    <span class="nav-text">
                        Profile Settings
@@ -86,7 +86,7 @@
                </a>
            </li>
            <li>
-            <a href="/LibMS/users/admin/pages/profile/manageusers.php">
+            <a href="/LibMSv1/users/admin/pages/profile/manageusers.php">
                 <i class="fa fa-users fa-md"></i>
                  <span class="nav-text">
                      Manage Accounts
@@ -95,7 +95,7 @@
          </li>
          <li>
           <li class="has-subnav">
-              <a href="/LibMS/users/admin/pages/qrpages/qrpage.php">
+              <a href="/LibMSv1/users/admin/pages/qrpages/qrpage.php">
                  <i class="fa fa-solid fa-qrcode fa-md"></i>
                   <span class="nav-text">
                       QR Code
@@ -104,7 +104,7 @@
              
           </li>
             <li class="has-subnav">
-                <a href="/LibMS/users/admin/pages/messages/messages.php">
+                <a href="/LibMSv1/users/admin/pages/messages/messages.php">
                    <i class="fa fa-comments fa-md"></i>
                     <span class="nav-text">
                         Messages
@@ -113,7 +113,7 @@
                 
             </li>
             <li>
-              <a href="/LibMS/users/admin/pages/messages/sendmessage.php">
+              <a href="/LibMSv1/users/admin/pages/messages/sendmessage.php">
                   <i class="fa fa-message fa-md"></i>
                   <span class="nav-text">
                      Send Message
@@ -121,7 +121,7 @@
               </a>
           </li>
             <li>
-                <a href="/LibMS/users/admin/pages/books/books.php">
+                <a href="/LibMSv1/users/admin/pages/books/books.php">
                     <i class="fa fa-book fa-md"></i>
                     <span class="nav-text">
                        All Books
@@ -146,7 +146,7 @@
               </a>
           </li>
           <li>
-            <a href="#">
+            <a href="/LibMSv1/users/admin/pages/recents/current_issue.php">
                 <i class="fa fa-book fa-md"></i>
                 <span class="nav-text">
                    Currently Issued Books
@@ -154,7 +154,7 @@
             </a>
         </li>
         <li>
-          <a href="#">
+          <a href="/LibMSv1/users/admin/pages/recents/prev_borrowed.php">
               <i class="fa fa-book fa-md"></i>
               <span class="nav-text">
                  Previously Borrowed Books
@@ -162,7 +162,7 @@
           </a>
       </li>
       <li>
-        <a href="#">
+        <a href="/LibMSv1/users/admin/pages/recents/recent_deletion.php">
             <i class="fa fa-trash fa-md"></i>
             <span class="nav-text">
                Recent Deletion Books
@@ -246,7 +246,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Book Identification Number (BID)</th>
+                        <th>ISBN</th>
                         <th>Book Name</th>
                         <th>Author</th>
                         <th>Year</th>
