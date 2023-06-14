@@ -1,51 +1,64 @@
 <?php
-    require('../dbconn.php');
+session_start(); // Start the session
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Retrieve form inputs
-        $username = $_POST['username'];
-        $idNo = $_POST['id_no'];
-        $password = $_POST['password'];
-        
-        // Validate the inputs (you can add more validation if needed)
-        if (empty($username) || empty($idNo) || empty($password)) {
-        }
+$servername = "localhost"; // Replace with your server name if different
+$username = "root"; // Replace with your database username
+$password = ""; // Replace with your database password
+$database = "libsys"; // Replace with your database name
 
-        // Authenticate the user (replace this with your own authentication logic)
-        // Assuming you have a table named 'users' with columns 'username', 'idNo', 'password', and 'acctype'
-        // You would need to modify the SQL query to match your actual table structure
-        $query = "SELECT * FROM users WHERE username = '$username' AND idNo = '$idNo' AND password = '$password'";
-        $result = mysqli_query($connection, $query);
+// Create a connection
+$conn = new mysqli($servername, $username, $password, $database);
+
+// Check the connection
+if ($conn->connect_error) {
+    echo '<script>alert("Connection failed: ' . $conn->connect_error . '");</script>';
+}
+
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'];
+    $idNo = $_POST['id_no'];
+    $password = $_POST['password'];
+
+    // Perform database query to check if the user exists
+    $query = "SELECT * FROM users WHERE username = '$username' AND id_no = '$idNo' AND password = '$password'";
+    $result = mysqli_query($conn, $query);
+
+    if (mysqli_num_rows($result) === 1) {
         $row = mysqli_fetch_assoc($result);
-
-        if (!$row) {
-            echo "Invalid input. No such account is existed.";
-            exit;
-        }
-        
-        // Redirect based on account type
         $acctype = $row['acctype'];
-        switch ($acctype) {
-            case 'admin':
-                header("Location: /LibMSv1/users/admin/index.php");
-                break;
-            case 'librarian':
-                header("Location: /LibMSv1/users/students/index.php");
-                break;
-            case 'staff':
-                header("Location: staff-page.php");
-                break;
-            case 'student':
-                header("Location: student-page.php");
-                break;
-            default:
-                echo "Invalid type";
-                exit;
+
+        // Store user data in the session
+        $_SESSION['username'] = $username;
+        $_SESSION['acctype'] = $acctype;
+        $_SESSION['id_no'] = $idNo;
+
+        // Check the user's account type and redirect accordingly
+        if ($acctype === 'admin') {
+            // Redirect to the admin page
+            header('Location: /LibMSv1/users/admin/index.php');
+            exit();
+        } elseif ($acctype === 'student') {
+            // Redirect to the student page
+            header('Location: /LibMSv1/users/students/index.php');
+            exit();
+        } elseif ($acctype === 'librarian') {
+            // Redirect to the librarian page
+            header('Location: librarian-page.php');
+            exit();
+        } elseif ($acctype === 'staff') {
+            // Redirect to the staff page
+            header('Location: staff-page.php');
+            exit();
         }
+    } else {
+        // Invalid input, account does not exist
+        echo '<script>alert("Invalid Input, Account does not exist!");</script>';
     }
-
-
+}
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -53,7 +66,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - LMS </title>
+    <title>Login - LMS</title>
     <!--Link for Tab ICON-->
     <link rel="icon" type="image/x-icon" href="/LibMSv1/resources/images/logov1.png">
     <!--Link for Bootstrap-->
@@ -65,37 +78,42 @@
     <link rel="stylesheet" href="/LibMSv1/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
     <!--Link for Google Font-->
     <link rel="stylesheet" href="/LibMSv1/resources/fonts/fonts.css"/>
-
 </head>
-
 <body>
-
     <div class="logform">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title"><b>Login to your Account:</b></div>
-                                    <div class="login">
-                                        <form>
-                                            <div class="form-group"><input type="text" Name="username" placeholder="Username" required=""></div>
-                                            <div class="form-group"><input type="text" Name="id_no" placeholder="ID Number"></div>
-                                            <div class="form-group"><input type="password" Name="password" placeholder="Password" required=""></div>
-                                            <button type="submit" class="btn btn-primary col-md-12"><i class="fa-solid fa-right-to-bracket"></i> Log In</button>
-                                            <hr>
-                                            <a href="/LibMSv1/index.php">
-                                                <button type="button" class="btn btn-primary col-md-12">
-                                                <i class="fa-solid fa-rotate-left fa-sm"></i> Go Back</button>
-                                            </a>
-                                        </form>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title"><b>Login to your Account:</b></div>
+                            <div class="login">
+                                <form method="POST" action="/LibMSv1/main/login.php">
+                                    <div class="form-group">
+                                        <input type="text" name="username" id="id_no" placeholder="Username" required="">
                                     </div>
+                                    <div class="form-group">
+                                        <input type="text" name="id_no" id="id_no" placeholder="ID Number">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" name="password" id="password" placeholder="Password" required="">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary col-md-12">
+                                        <i class="fa-solid fa-right-to-bracket"></i> Log In
+                                    </button>
+                                    <hr>
+                                    <a href="/LibMSv1/index.php">
+                                        <button type="button" class="btn btn-primary col-md-12">
+                                            <i class="fa-solid fa-rotate-left fa-sm"></i> Go Back
+                                        </button>
+                                    </a>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
+    </div>
 </body>
 </html>

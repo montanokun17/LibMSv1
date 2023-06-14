@@ -1,19 +1,19 @@
-CREATE DATABASE LibSys;
+CREATE DATABASE libsys;
 
-USE LibSys;
+USE libsys;
 
 -----------------Table for Users Accounts---------------
 
 CREATE TABLE users (
-  'id_no' INT PRIMARY KEY AUTO_INCREMENT,
-  'username' VARCHAR(50) NOT NULL,
-  'email' VARCHAR (50) NOT NULL,
-  'firstname' VARCHAR(50) NOT NULL,
-  'lastname' VARCHAR(50) NOT NULL,
-  'password' VARCHAR(50) NOT NULL,
-  'acctype' ENUM('admin', 'staff', 'librarian', 'student') NOT NULL,
-  'schlvl' ENUM('Elementary', 'Junior High School', 'Senior High School', 'College', 'Graduated'),
-  'status' ENUM('Active','Disabled') NOT NULL
+  id_no INT PRIMARY KEY AUTO_INCREMENT,
+  username VARCHAR(50) NOT NULL,
+  email VARCHAR (50) NOT NULL,
+  firstname VARCHAR(50) NOT NULL,
+  lastname VARCHAR(50) NOT NULL,
+  password VARCHAR(50) NOT NULL,
+  acctype ENUM('admin', 'staff', 'librarian', 'student') NOT NULL,
+  schlvl ENUM('Elementary', 'Junior High School', 'Senior High School', 'College', 'Graduated'),
+  status ENUM('Active','Disabled') NOT NULL
 );
 
 --------------------------------------------------------
@@ -81,7 +81,7 @@ CREATE TABLE `borrow` (
   `borrow_id` INT PRIMARY KEY AUTO_INCREMENT,
   `id_no` VARCHAR(255) NOT NULL,
   `book_id` INT NOT NULL,
-  `date_of_issue` DATE NOVARCHAR
+  `date_of_issue` DATE NOt NULL,
   `due_date` DATE NOT NULL,
   `date_of_return` DATE NOT NULL
 );

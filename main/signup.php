@@ -1,41 +1,82 @@
 <?php
-// Assuming you have established a database connection
+$servername = "localhost"; // Replace with your server name if different
+$username = "root"; // Replace with your database username
+$password = ""; // Replace with your database password
+$database = "libsys"; // Replace with your database name
 
-require ('../dbconn.php');
+// Create a connection
+$conn = new mysqli($servername, $username, $password, $database);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
 $command = 'python3 id_number.py';
 $id_number = exec($command);
 
-
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve form data
-    $id_no = $_POST['id_number'];
     $firstname = $_POST['firstname'];
     $lastname = $_POST['lastname'];
     $username = $_POST['username'];
     $email = $_POST['email'];
-    $password = $_POST['password'];
+    $password = md5($_POST['password']);
     $acctype = $_POST['acctype'];
     $schlvl = $_POST['schlvl'];
 
-    // Prepare and execute the SQL query to insert the data into the table
-    $sql = "INSERT INTO users (username, firstname, lastname, password, acctype, schlvl, status) 
-            VALUES ('$username', '$firstname', '$lastname', '$password', '$acctype', '$schlvl', 'Active')";
+    // Prepare and bind the SQL query with placeholders
+    $stmt = $conn->prepare("INSERT INTO users (username, firstname, lastname, email, password, acctype, schlvl, status) 
+                            VALUES (?, ?, ?, ?, ?, ?, ?, 'Active')");
+    $stmt->bind_param("sssssss", $username, $firstname, $lastname, $email, $password, $acctype, $schlvl);
 
-if (mysqli_query($connection, $sql)) {
-    // Data insertion successful
-    echo "<script>alert('Account created successfully.');</script>";
-} else {
-    // Error occurred while inserting data
-    echo "<script>alert('Error: " . $sql . "\\n" . mysqli_error($connection) . "');</script>";
-}
+    if ($stmt->execute()) {
+        // Data insertion successful
+        echo "<script>alert('Account created successfully.');</script>";
 
+        // Prepare and bind the SQL query to check the user's account
+        $stmt = $conn->prepare("SELECT * FROM users WHERE username = ? AND password = ?");
+        $stmt->bind_param("ss", $username, $password);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows === 1) {
+            $row = $result->fetch_assoc();
+            $acctype = $row['acctype'];
+
+            // Check the user's account type and redirect accordingly
+            if ($acctype === 'admin') {
+                // Redirect to the admin page
+                header('Location: /LibMSv1/users/admin/index.php');
+                exit();
+            } elseif ($acctype === 'student') {
+                // Redirect to the student page
+                header('Location: /LibMSv1/users/students/index.php');
+                exit();
+            } elseif ($acctype === 'librarian') {
+                // Redirect to the librarian page
+                header('Location: librarian-page.php');
+                exit();
+            } elseif ($acctype === 'staff') {
+                // Redirect to the staff page
+                header('Location: staff-page.php');
+                exit();
+            }
+        }
+    } else {
+        // Error occurred while inserting data
+        echo "<script>alert('Error: " . $stmt->error . "');</script>";
+    }
+
+    // Close the prepared statement
+    $stmt->close();
 
     // Close the database connection
-    mysqli_close($connection);
+    $conn->close();
 }
 ?>
+
 
 
 <!DOCTYPE html>
@@ -73,6 +114,7 @@ if (mysqli_query($connection, $sql)) {
                                             <div class="form-group"><input type="text" Name="lastname" id="lastname" placeholder="Last Name" required=""></div>
                                             <div class="form-group"><input type="text" Name="username" id="username" placeholder="Username" required=""></div>
                                             <div class="form-group"><input type="text" Name="email" id="email" placeholder="Email" required=""></div>
+                                            <div class="form-group"><input type="text" Name="con_num" id="con_num" placeholder="Contact Number" required=""></div>
                                             <div class="form-group"><input type="password" Name="password" id="password" placeholder="Password" required=""></div>
                                             <label for="acctype">Account Type: </label>
                                                 <select name="acctype" class="form-select" id="acctype">

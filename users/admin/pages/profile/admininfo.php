@@ -1,3 +1,20 @@
+<?php
+$servername = "localhost"; // Replace with your server name if different
+$user_name = "root"; // Replace with your database username
+$password = ""; // Replace with your database password
+$database = "libsys"; // Replace with your database name
+
+// Create a connection
+$conn = new mysqli($servername, $user_name, $password, $database);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -198,7 +215,7 @@
                       Name: 
                     </span>
                     <span class="name">
-                      Administrator
+                      <?php echo $firstname, ' ', $lastname; ?>
                     </span>
                   </li> 
 
@@ -207,7 +224,7 @@
                       Username: 
                     </span>
                     <span class="username">
-                      admin
+                      <?php echo $username; ?>
                     </span>
                   </li> 
 
@@ -216,7 +233,7 @@
                       ID Number:
                     </span>
                     <span class="IdNo">
-                      01-0000
+                      <?php ?>
                     </span>
                   </li> 
 
@@ -225,7 +242,7 @@
                       Email: 
                     </span>
                     <span class="email">
-                      admin_libSysM@email.com
+                      <?php echo $email; ?>
                     </span>
                   </li> 
 
@@ -243,7 +260,7 @@
                       Account Type: 
                     </span>
                     <span class="acctype">
-                      Admin
+                      <?php echo $acctype; ?>
                     </span>
                   </li> 
 

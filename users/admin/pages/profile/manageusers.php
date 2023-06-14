@@ -1,3 +1,61 @@
+<?php
+$servername = "localhost"; // Replace with your server name if different
+$user_name = "root"; // Replace with your database username
+$Password = ""; // Replace with your database password
+$database = "libsys"; // Replace with your database name
+
+// Create a connection
+$conn = new mysqli($servername, $user_name, $Password, $database);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$idNo = "";
+    $firstname = "";
+    $lastname = "";
+    $acctype = "";
+    $email = "";
+    $username = "";
+    $status = "";
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+
+$username = $_POST['username'];
+$idNo = $_POST['id_no'];
+$firstname = $_POST['firstname'];
+$lastname = $_POST['lastname'];
+$email = $_POST['email'];
+$acctype = $_POST['acctype'];
+$status = $_POST['status'];
+
+// Assuming you're using mysqli extension
+$query = "SELECT * FROM users";
+$result = mysqli_query($conn, $query);
+
+// Check if the query executed successfully
+if ($result && mysqli_num_rows($result) > 0) {
+    $user = mysqli_fetch_assoc($result);
+
+    // Extract the user's information from the $user variable
+    $firstname = $user['firstname'];
+    $lastname = $user['lastname'];
+    $email = $user['email'];
+    $username = $user['username'];
+    $acctype = $user['acctype'];
+    $idNo = $user['id_no'];
+    $status = $user['status'];
+    
+    }
+}
+
+// Close the database connection
+$conn->close();
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -219,12 +277,12 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>04001</td>
-                            <td>John Doe</td>
-                            <td>johndoe@example.com</td>
-                            <td>555-1234</td>
-                            <td>Student</td>
-                            <td>Mock Test</td>
+                            <td><?php echo $idNo; ?></td>
+                            <td><?php echo $firstname, "", $lastname ?></td>
+                            <td><?php echo $email; ?></td>
+                            <td><?php echo "xxxxxxxxx"; ?></td>
+                            <td><?php echo $acctype; ?></td>
+                            <td><?php echo $status; ?></td>
                             <td>
                             
                             <a href="/LibMSv1/users/admin/pages/profile/userdetails.php">

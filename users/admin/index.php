@@ -1,38 +1,60 @@
 <?php
- // Assuming you have established a database connection
-require ('../dbconn.php');
+session_start(); // Start the session
 
-session_start();
+$servername = "localhost"; // Replace with your server name if different
+$user_name = "root"; // Replace with your database username
+$password = ""; // Replace with your database password
+$database = "libsys"; // Replace with your database name
 
-// Query the database to retrieve the data
-$sql = "SELECT * FROM users WHERE acctype = 'admin'";
-$result = mysqli_query($connection, $sql);
+// Create a connection
+$conn = new mysqli($servername, $user_name, $password, $database);
 
-// Check if the query was successful
-if ($result) {
-    // Fetch the row from the result set
-    $row = mysqli_fetch_assoc($result);
-
-    // Assign the database value to a new variable
-    //$variable = $row['column_name'];
-    $id_no = $row['id_no'];
-    $username = $row['username'];
-    $firstname = $row['firstname'];
-    $lastname = $row['lastname'];
-    $acctype = $row['acctype'];
-    $email = $row['email'];
-
-    // Free the result set
-    mysqli_free_result($result);
-} else {
-    // Error occurred while querying the database
-    echo "Error: " . mysqli_error($connection);
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
+ 
 
-// Close the database connection
-mysqli_close($connection);
+// Initialize variables with default values
+$firstname = "";
+$lastname = "";
+$acctype = "";
+$email = "";
+$idNo = "";
+$username = "";
 
+if ($_SESSION['acctype'] === 'admin') {
+
+    $idNo = $_SESSION['id_no'];
+    $username = $_SESSION['username'];
+
+    // Prepare and execute the SQL query
+    $query = "SELECT * FROM users WHERE id_no = ? AND username = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ss", $idNo, $username);
+    $stmt->execute();
+
+    // Fetch the result
+    $result = $stmt->get_result();
+    if ($result->num_rows === 1) {
+        $row = $result->fetch_assoc();
+
+        // Retrieve the user's information
+        $firstname = $row['firstname'];
+        $lastname = $row['lastname'];
+        $idNo = $row['id_no'];
+        $acctype = $row['acctype'];
+        $username = $row['username'];
+        $email = $row['email'];
+        
+    } else {
+        // Handle case when user is not found
+        // For example, redirect to an error page or display an error message
+        echo "User not found!";
+    }
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -58,128 +80,134 @@ mysqli_close($connection);
 <body>
 
 <!--NAVBAR START-->
-<nav class="navbar navbar-expand-lg navbar-light bg-light"> 
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#"><img src="#" width="40px" height="40px"></a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#"><img src="#" width="40px" height="40px"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/LibMSv1/users/admin/index.php"><i class="fa-solid fa-user fa-xs"></i> Profile Card</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/LibMSv1/users/admin/pages/profile/manageusers.php"></i><i class="fa-solid fa-users fa-xs"></i> Accounts</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/LibMSv1/users/admin/pages/books/books.php"><i class="fa-solid fa-book-open fa-sm"></i> Books</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/LibMSv1/users/admin/pages/database/database.php"><i class="fa-solid fa-database fa-sm"></i> Database</a>
-              </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page"
+                       href="/LibMSv1/users/admin/index.php"><i class="fa-solid fa-user fa-xs"></i> Profile Card</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/LibMSv1/users/admin/pages/profile/manageusers.php"><i
+                                class="fa-solid fa-users fa-xs"></i> Accounts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/LibMSv1/users/admin/pages/books/books.php"><i
+                                class="fa-solid fa-book-open fa-sm"></i> Books</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/LibMSv1/users/admin/pages/database/database.php"><i
+                                class="fa-solid fa-database fa-sm"></i> Database</a>
+                </li>
             </ul>
 
             <ul class="navbar-nav ms-auto">
-              <li class="nav-item">
-                <a class="nav-link" href="#"><i class="fa-solid fa-right-from-bracket fa-xs"></i> Logout</a>
-              </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="?logout=true"><i class="fa-solid fa-right-from-bracket fa-xs"></i> Logout</a>
+                </li>
+
             </ul>
 
             <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link" href="/LibMSv1/users/admin/index.php">
-                    <img src="/LibMSv1/resources/images/user.png" 
-                    width="40" height="40" style="border:1px solid #000000;" class="rounded-circle">
-                </a>
-              </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/LibMSv1/users/admin/index.php">
+                        <img src="/LibMSv1/resources/images/user.png"
+                             width="40" height="40" style="border:1px solid #000000;" class="rounded-circle">
+                    </a>
+                </li>
             </ul>
-          </div>
         </div>
-      </nav>
+    </div>
+</nav>
 <!--NAVBAR END-->
 
 <!--SIDEBAR START-->
-<div class="area"></div><nav class="main-menu">
-        <ul>
-            <li>
-                <a href="/LibMSv1/users/admin/index.php">
-                    <i class="fa fa-user fa-md"></i>
-                    <span class="nav-text">
+<div class="area"></div>
+<nav class="main-menu">
+    <ul>
+        <li>
+            <a href="/LibMSv1/users/admin/index.php">
+                <i class="fa fa-user fa-md"></i>
+                <span class="nav-text">
                        Profile Card
                     </span>
-                </a>
-              
-            </li>
-            <li>
-              <a href="/LibMSv1/users/admin/pages/profile/profilesetting.php">
-                  <i class="fa fa-cogs fa-md"></i>
-                   <span class="nav-text">
+            </a>
+
+        </li>
+        <li>
+            <a href="/LibMSv1/users/admin/pages/profile/profilesetting.php">
+                <i class="fa fa-cogs fa-md"></i>
+                <span class="nav-text">
                        Profile Settings
                    </span>
-               </a>
-           </li>
-           <li>
+            </a>
+        </li>
+        <li>
             <a href="/LibMSv1/users/admin/pages/profile/manageusers.php">
                 <i class="fa fa-users fa-md"></i>
-                 <span class="nav-text">
+                <span class="nav-text">
                      Manage Accounts
                  </span>
-             </a>
-         </li>
-         <li>
-          <li class="has-subnav">
-              <a href="/LibMSv1/users/admin/pages/qrpages/qrpage.php">
-                 <i class="fa fa-solid fa-qrcode fa-md"></i>
-                  <span class="nav-text">
+            </a>
+        </li>
+        <li class="has-subnav">
+            <a href="/LibMSv1/users/admin/pages/qrpages/qrpage.php">
+                <i class="fa fa-solid fa-qrcode fa-md"></i>
+                <span class="nav-text">
                       QR Code
                   </span>
-              </a>
-             
-          </li>
-            <li class="has-subnav">
-                <a href="/LibMSv1/users/admin/pages/messages/messages.php">
-                  <i class=" fa fa-regular fa-envelope fa-md"></i>
-                    <span class="nav-text">
+            </a>
+
+        </li>
+        <li class="has-subnav">
+            <a href="/LibMSv1/users/admin/pages/messages/messages.php">
+                <i class=" fa fa-regular fa-envelope fa-md"></i>
+                <span class="nav-text">
                         Messages
                     </span>
-                </a>
-                
-            </li>
-            <li>
-              <a href="/LibMSv1/users/admin/pages/messages/sendmessage.php">
-                  <i class="fa fa-message fa-md"></i>
-                  <span class="nav-text">
+            </a>
+
+        </li>
+        <li>
+            <a href="/LibMSv1/users/admin/pages/messages/sendmessage.php">
+                <i class="fa fa-message fa-md"></i>
+                <span class="nav-text">
                      Send Message
                   </span>
-              </a>
-          </li>
-            <li>
-                <a href="/LibMSv1/users/admin/pages/books/books.php">
-                    <i class="fa fa-book fa-md"></i>
-                    <span class="nav-text">
+            </a>
+        </li>
+        <li>
+            <a href="/LibMSv1/users/admin/pages/books/books.php">
+                <i class="fa fa-book fa-md"></i>
+                <span class="nav-text">
                        All Books
                     </span>
-                </a>
-            </li>
-            <li>
-              <li>
-                <a href="/LibMSv1/users/admin/pages/books/addbook.php">
-                    <i class="fa fa-plus fa-md"></i>
-                    <span class="nav-text">
+            </a>
+        </li>
+        <li>
+            <a href="/LibMSv1/users/admin/pages/books/addbook.php">
+                <i class="fa fa-plus fa-md"></i>
+                <span class="nav-text">
                        Add Books
                     </span>
-                </a>
-            </li>
-            <li>
-              <a href="/LibMSv1/users/admin/pages/requests/requests.php">
-                  <i class="fa fa-bars fa-md"></i>
-                  <span class="nav-text">
+            </a>
+        </li>
+        <li>
+            <a href="/LibMSv1/users/admin/pages/requests/requests.php">
+                <i class="fa fa-bars fa-md"></i>
+                <span class="nav-text">
                      Issue/Return Requests
                   </span>
-              </a>
-          </li>
-          <li>
+            </a>
+        </li>
+        <li>
             <a href="/LibMSv1/users/admin/pages/recents/current_issue.php">
                 <i class="fa fa-book fa-md"></i>
                 <span class="nav-text">
@@ -188,81 +216,46 @@ mysqli_close($connection);
             </a>
         </li>
         <li>
-          <a href="/LibMSv1/users/admin/pages/recents/prev_borrowed.php">
-              <i class="fa fa-book fa-md"></i>
-              <span class="nav-text">
+            <a href="/LibMSv1/users/admin/pages/recents/prev_borrowed.php">
+                <i class="fa fa-book fa-md"></i>
+                <span class="nav-text">
                  Previously Borrowed Books
               </span>
-          </a>
-      </li>
-      <li>
-        <a href="/LibMSv1/users/admin/pages/recents/recent_deletion.php">
-            <i class="fa fa-trash fa-md"></i>
-            <span class="nav-text">
+            </a>
+        </li>
+        <li>
+            <a href="/LibMSv1/users/admin/pages/recents/recent_deletion.php">
+                <i class="fa fa-trash fa-md"></i>
+                <span class="nav-text">
                Recent Deletion Books
             </span>
-        </a>
-    </li>
-  </ul>
-</ul>
-
-        <ul class="logout">
-            <li>
-               <a href="/LibMSv1/index.php">
-                     <i class="fa fa-right-from-bracket fa-md"></i>
-                    <span class="nav-text">
-                        Logout
-                    </span>
-                </a>
-            </li>  
-        </ul>
-    </nav>
-
-    <?php
-
-        // Clear all session variables
-        $_SESSION = array();
-
-        // Destroy the session
-        session_destroy();
-
-        // Redirect the user to the login page
-        header("Location: /LibMS/index.php");
-        exit;
-
-    ?>
-
-    <script>
-      // Disable the back button after logging out
-      history.pushState(null, null, location.href);
-      window.onpopstate = function () {
-          history.go(1);
-      };
-    </script>
+            </a>
+        </li>
+    </ul>
+</nav>
 
 
 <!--SIDEBAR END-->
 
-    <!--PROFILE CARD START-->
-    <div class="profcard">
-      <div class="card">
+<!--PROFILE CARD START-->
+<div class="profcard">
+    <div class="card">
         <img src="/LibMSv1/resources/images/user.png" style="width:100%">
-        <h3><?php echo $firstname,'',$lastname; ?></h3>
-          <p class="title">ID Number: <?php echo $id_no; ?></p>
-          <p><b><em>Account Role Type: <?php echo $acctype; ?></em></b></p>
+        <h3><?php echo $firstname. ' '. $lastname; ?></h3>
+        <p class="title">ID Number: <?php echo $idNo; ?></p>
+        <p><b><em>Account Role Type: <?php echo $acctype; ?></em></b></p>
         <p class="profinfo">Username: </p>
-          <p><em><?php echo $username; ?></em></p>
+        <p><em><?php echo $username; ?></em></p>
         <p class="profinfo">Email: </p>
-          <p><em><?php echo $email; ?></em></p>
+        <p><em><?php echo $email; ?></em></p>
         <p><a href="/LibMSv1/users/admin/pages/profile/admininfo.php"><button>Account Info</button></a></p>
-      </div>  
     </div>
-    <!--PROFILE CARD END-->
+</div>
+<!--PROFILE CARD END-->
 
+<!--MAIN CARD START-->
 
-    <!--MAIN CARD START-->
-      
-    <!--MAIN CARD END-->
+<!--MAIN CARD END-->
 
 </body>
 </html>
