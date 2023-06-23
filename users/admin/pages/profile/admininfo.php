@@ -1,8 +1,10 @@
 <?php
-$servername = "localhost"; // Replace with your server name if different
-$user_name = "root"; // Replace with your database username
-$password = ""; // Replace with your database password
-$database = "libsys"; // Replace with your database name
+session_start(); // Start the session
+
+$servername = "localhost";
+$user_name = "root";
+$password = "";
+$database = "libsys";
 
 // Create a connection
 $conn = new mysqli($servername, $user_name, $password, $database);
@@ -11,8 +13,64 @@ $conn = new mysqli($servername, $user_name, $password, $database);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+ 
 
+// Initialize variables with default values
+$firstname = "";
+$lastname = "";
+$acctype = "";
+$email = "";
+$idNo = "";
+$username = "";
+$con_num = "";
 
+if ($_SESSION['acctype'] === 'admin') {
+
+    $idNo = $_SESSION['id_no'];
+    $username = $_SESSION['username'];
+
+    // Prepare and execute the SQL query
+    $query = "SELECT * FROM users WHERE id_no = ? AND username = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ss", $idNo, $username);
+    $stmt->execute();
+
+    // Fetch the result
+    $result = $stmt->get_result();
+    if ($result->num_rows === 1) {
+        $row = $result->fetch_assoc();
+
+        // Retrieve the user's information
+        $firstname = $row['firstname'];
+        $lastname = $row['lastname'];
+        $idNo = $row['id_no'];
+        $acctype = $row['acctype'];
+        $username = $row['username'];
+        $email = $row['email'];
+        $con_num = $row['con_num'];
+        
+    } else {
+        // Handle case when user is not found
+        // For example, redirect to an error page or display an error message
+        echo "User not found!";
+    }
+}
+?>
+
+<?php
+
+// Check if the logout parameter is set
+if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
+    // Unset all session variables
+    $_SESSION = array();
+
+    // Destroy the session
+    session_destroy();
+
+    // Redirect to the login page
+    header('Location: /LibMSv1/main/login.php');
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -65,7 +123,7 @@ if ($conn->connect_error) {
 
             <ul class="navbar-nav ms-auto">
               <li class="nav-item">
-                <a class="nav-link" href="#"><i class="fa-solid fa-right-from-bracket fa-xs"></i> Logout</a>
+                <a class="nav-link" href="?logout=true"><i class="fa-solid fa-right-from-bracket fa-xs"></i> Logout</a>
               </li>
             </ul>
 
@@ -191,7 +249,7 @@ if ($conn->connect_error) {
 
         <ul class="logout">
             <li>
-               <a href="#">
+               <a href="?logout=true">
                      <i class="fa fa-right-from-bracket fa-md"></i>
                     <span class="nav-text">
                         Logout
@@ -233,7 +291,7 @@ if ($conn->connect_error) {
                       ID Number:
                     </span>
                     <span class="IdNo">
-                      <?php ?>
+                      <?php echo $idNo; ?>
                     </span>
                   </li> 
 
@@ -251,7 +309,7 @@ if ($conn->connect_error) {
                       Contact No.: 
                     </span>
                     <span class="contnum">
-                      +1 0900 0000 000
+                      <?php echo $con_num; ?>
                     </span>
                   </li> 
 

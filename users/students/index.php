@@ -1,3 +1,60 @@
+<?php
+session_start(); // Start the session
+
+$servername = "localhost"; // Replace with your server name if different
+$user_name = "root"; // Replace with your database username
+$password = ""; // Replace with your database password
+$database = "libsys"; // Replace with your database name
+
+// Create a connection
+$conn = new mysqli($servername, $user_name, $password, $database);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+ 
+
+// Initialize variables with default values
+$firstname = "";
+$lastname = "";
+$acctype = "";
+$email = "";
+$idNo = "";
+$username = "";
+
+if ($_SESSION['acctype'] === 'admin') {
+
+    $idNo = $_SESSION['id_no'];
+    $username = $_SESSION['username'];
+
+    // Prepare and execute the SQL query
+    $query = "SELECT * FROM users WHERE id_no = ? AND username = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ss", $idNo, $username);
+    $stmt->execute();
+
+    // Fetch the result
+    $result = $stmt->get_result();
+    if ($result->num_rows === 1) {
+        $row = $result->fetch_assoc();
+
+        // Retrieve the user's information
+        $firstname = $row['firstname'];
+        $lastname = $row['lastname'];
+        $idNo = $row['id_no'];
+        $acctype = $row['acctype'];
+        $username = $row['username'];
+        $email = $row['email'];
+        
+    } else {
+        // Handle case when user is not found
+        // For example, redirect to an error page or display an error message
+        echo "User not found!";
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -140,13 +197,13 @@
     <div class="profcard">
       <div class="card">
         <img src="/LibMSv1/resources/images/user.png" style="width:100%">
-        <h3>Fullname Lastname</h3>
-        <p class="title">ID Number: 010004</p>
-        <p><b><em>Account Role Type: STUDENT</em></b></p>
+        <h3><?php echo $firstname. ' '. $lastname; ?></h3>
+        <p class="title">ID Number: <?php echo $idNo; ?></p>
+        <p><b><em>Account Role Type: <?php echo $acctype?></em></b></p>
         <p class="profinfo">Username: </p>
-        <p><em>studentusername</em></p>
+        <p><em><?php echo $username?></em></p>
         <p class="profinfo">Email: </p>
-        <p><em> </em></p>
+        <p><em> <?php echo $email?></em></p>
         <p><a href=""><button>Account Info</button></a></p>
       </div>  
     </div>

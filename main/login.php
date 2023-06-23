@@ -1,10 +1,10 @@
 <?php
 session_start(); // Start the session
 
-$servername = "localhost"; // Replace with your server name if different
-$username = "root"; // Replace with your database username
-$password = ""; // Replace with your database password
-$database = "libsys"; // Replace with your database name
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "libsys";
 
 // Create a connection
 $conn = new mysqli($servername, $username, $password, $database);
@@ -58,6 +58,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
+<script>
+    if (window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.href);
+    }
+</script>
+
 
 
 <!DOCTYPE html>
@@ -80,6 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="/LibMSv1/resources/fonts/fonts.css"/>
 </head>
 <body>
+    
     <div class="logform">
         <div class="container">
             <div class="row">
@@ -98,6 +105,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <div class="form-group">
                                         <input type="password" name="password" id="password" placeholder="Password" required="">
                                     </div>
+
+                                    <div class="container">
+                                        <p>Can't Remember your Password? <a href="">Forgot Password</a></p>
+                                    </div>
+
                                     <button type="submit" class="btn btn-primary col-md-12">
                                         <i class="fa-solid fa-right-to-bracket"></i> Log In
                                     </button>

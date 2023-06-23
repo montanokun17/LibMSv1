@@ -1,3 +1,79 @@
+<?php
+session_start(); // Start the session
+
+$servername = "localhost";
+$user_name = "root";
+$password = "";
+$database = "libsys";
+
+// Create a connection
+$conn = new mysqli($servername, $user_name, $password, $database);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+ 
+
+// Initialize variables with default values
+$firstname = "";
+$lastname = "";
+$acctype = "";
+$email = "";
+$idNo = "";
+$username = "";
+$con_num = "";
+
+if ($_SESSION['acctype'] === 'admin') {
+
+    $idNo = $_SESSION['id_no'];
+    $username = $_SESSION['username'];
+
+    // Prepare and execute the SQL query
+    $query = "SELECT * FROM users WHERE id_no = ? AND username = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ss", $idNo, $username);
+    $stmt->execute();
+
+    // Fetch the result
+    $result = $stmt->get_result();
+    if ($result->num_rows === 1) {
+        $row = $result->fetch_assoc();
+
+        // Retrieve the user's information
+        $firstname = $row['firstname'];
+        $lastname = $row['lastname'];
+        $idNo = $row['id_no'];
+        $acctype = $row['acctype'];
+        $username = $row['username'];
+        $email = $row['email'];
+        $con_num = $row['con_num'];
+        
+    } else {
+        // Handle case when user is not found
+        // For example, redirect to an error page or display an error message
+        echo "User not found!";
+    }
+}
+
+?>
+
+<?php
+
+// Check if the logout parameter is set
+if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
+    // Unset all session variables
+    $_SESSION = array();
+
+    // Destroy the session
+    session_destroy();
+
+    // Redirect to the login page
+    header('Location: /LibMSv1/main/login.php');
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,7 +124,7 @@
 
             <ul class="navbar-nav ms-auto">
               <li class="nav-item">
-                <a class="nav-link" href="#"><i class="fa-solid fa-right-from-bracket fa-xs"></i> Logout</a>
+                <a class="nav-link" href="?logout=true"><i class="fa-solid fa-right-from-bracket fa-xs"></i> Logout</a>
               </li>
             </ul>
 
@@ -174,7 +250,7 @@
 
         <ul class="logout">
             <li>
-               <a href="#">
+               <a href="?logout=true">
                      <i class="fa fa-right-from-bracket fa-md"></i>
                     <span class="nav-text">
                         Logout
@@ -191,25 +267,55 @@
             <h3 class="title">Edit Admin's Info</h3>
             <hr>
             <div class="col-md-6">
-                <form action="#" method="post">
+                <form method="POST" action="#">
                     <label for="firstname">First Name:</label>
-                    <div class="form-group"><input type="text" Name="firstname" required=""></div>
+                    <div class="form-group"><input type="text" name="firstname" value="<?php echo $firstname; ?>" required=""></div>
 
                     <label for="lastname">Last Name:</label>
-                    <div class="form-group"><input type="text" Name="lastname" required=""></div>
+                    <div class="form-group"><input type="text" name="lastname" value="<?php echo $lastname; ?>" required=""></div>
 
                     <label for="username">Username:</label>
-                    <div class="form-group"><input type="text" Name="username" required=""></div>
+                    <div class="form-group"><input type="text" name="username" value="<?php echo $username; ?>" required=""></div>
 
                     <label for="email">Email Address:</label>
-                    <div class="form-group"><input type="text" Name="email" required=""></div>
+                    <div class="form-group"><input type="text" name="email" value="<?php echo $email; ?>" required=""></div>
+
+                    <label for="con_num">Contact Number:</label>
+                    <div class="form-group"><input type="text" name="con_num" value="<?php echo $con_num; ?>" required=""></div>
+
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+
+                    <a href="/LibMSv1/users/admin/pages/profile/admininfo.php">
+                      <button type="button" class="btn btn-primary"><i class="fa-solid fa-rotate-left"></i> Go Back <em>(Admin's Info)</em></button>
+                    </a>
+
                 </form>
+                <?php
+                  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    // Retrieve the updated values from the form
+                    $newFirstname = $_POST['firstname'];
+                    $newLastname = $_POST['lastname'];
+                    $newUsername = $_POST['username'];
+                    $newEmail = $_POST['email'];
+                    $newConNum = $_POST['con_num'];
+                  
+                    // Prepare and execute the SQL query to update the user's data
+                    $query = "UPDATE users SET firstname = ?, lastname = ?, username = ?, email = ?, con_num = ? WHERE id_no = ? AND username = ?";
+                    $stmt = $conn->prepare($query);
+                    $stmt->bind_param("sssssss", $newFirstname, $newLastname, $newUsername, $newEmail, $newConNum, $_SESSION['id_no'], $_SESSION['username']);
+                    $stmt->execute();
+                  
+                    // Check if the update was successful
+                    if ($stmt->affected_rows === 1) {
+                        echo "<script>alert('User account updated successfully!');</script>";
+                        // Redirect the user to a success page or perform any additional actions
+                    } else {
+                        echo "<script>alert('Failed to update user account!');</script>";
+                        // Handle the case when the update fails, for example, redirect to an error page or display an error message
+                    }
+                  }
+                ?>
 
-                <button type="button" class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save</button>
-
-                <a href="/LibMSv1/users/admin/pages/profile/admininfo.php">
-                    <button type="button" class="btn btn-primary"><i class="fa-solid fa-rotate-left"></i> Go Back <em>(Admin's Info)</em></button>
-                </a>
             </div>
         </div>
       </div>

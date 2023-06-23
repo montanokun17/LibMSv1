@@ -1,4 +1,7 @@
 <?php
+
+session_start();
+
 $servername = "localhost"; // Replace with your server name if different
 $username = "root"; // Replace with your database username
 $password = ""; // Replace with your database password
@@ -27,9 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $schlvl = $_POST['schlvl'];
 
     // Prepare and bind the SQL query with placeholders
-    $stmt = $conn->prepare("INSERT INTO users (username, firstname, lastname, email, password, acctype, schlvl, status) 
+    $stmt = $conn->prepare("INSERT INTO users (username, firstname, lastname, email, con_num, password, acctype, schlvl, status) 
                             VALUES (?, ?, ?, ?, ?, ?, ?, 'Active')");
-    $stmt->bind_param("sssssss", $username, $firstname, $lastname, $email, $password, $acctype, $schlvl);
+    $stmt->bind_param("sssssss", $username, $firstname, $lastname, $email, $con_num, $password, $acctype, $schlvl);
 
     if ($stmt->execute()) {
         // Data insertion successful

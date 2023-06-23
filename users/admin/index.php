@@ -1,10 +1,10 @@
 <?php
 session_start(); // Start the session
 
-$servername = "localhost"; // Replace with your server name if different
-$user_name = "root"; // Replace with your database username
-$password = ""; // Replace with your database password
-$database = "libsys"; // Replace with your database name
+$servername = "localhost";
+$user_name = "root";
+$password = "";
+$database = "libsys";
 
 // Create a connection
 $conn = new mysqli($servername, $user_name, $password, $database);
@@ -54,6 +54,23 @@ if ($_SESSION['acctype'] === 'admin') {
     }
 }
 ?>
+
+<?php
+
+// Check if the logout parameter is set
+if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
+    // Unset all session variables
+    $_SESSION = array();
+
+    // Destroy the session
+    session_destroy();
+
+    // Redirect to the login page
+    header('Location: /LibMSv1/main/login.php');
+    exit();
+}
+?>
+
 
 
 <!DOCTYPE html>
