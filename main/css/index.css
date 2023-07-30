@@ -1,22 +1,87 @@
+/* Reset some default styles */
+body, h1, h2, h3, h4, h5, h6, p, a {
+  margin: 0;
+  padding: 0;
+}
 
-/*MAIN CARD*/
-    .container {
-        align-content: center;
-        text-align: center;
-    }
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
 
-    .homelogo {
-        margin-top: 25px;
-    }
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-    body {
-        background-image: url("/LibMSv1/resources/images/bgpic3.png");
-        background-size: cover;
-    }
+/* Main styles for the Landing Page */
+.main {
+  text-align: center;
+  margin-top: 50px;
+}
 
-    #head1 {
-        text-align: center;
-        align-content: center;
-        color: antiquewhite;
-    }
-/*MAIN CARD*/
+.homelogo img {
+  max-width: 400px;
+  height: auto;
+}
+
+.hometxt {
+  text-align: center;
+  margin-top: 30px;
+}
+
+#head1 {
+  font-size: 36px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.homecard {
+  margin-top: 50px;
+}
+
+.card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+.card-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.card-text {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* Media Query for smaller screens */
+@media (max-width: 576px) {
+  .homelogo img {
+    max-width: 300px;
+  }
+
+  #head1 {
+    font-size: 30px;
+  }
+
+  .card-title {
+    font-size: 20px;
+  }
+
+  .card-text {
+    font-size: 14px;
+  }
+}

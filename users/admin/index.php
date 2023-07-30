@@ -22,6 +22,7 @@ $acctype = "";
 $email = "";
 $idNo = "";
 $username = "";
+$con_num = "";
 
 if ($_SESSION['acctype'] === 'admin') {
 
@@ -46,6 +47,7 @@ if ($_SESSION['acctype'] === 'admin') {
         $acctype = $row['acctype'];
         $username = $row['username'];
         $email = $row['email'];
+        $con_num = $row['con_num'];
         
     } else {
         // Handle case when user is not found
@@ -83,10 +85,12 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
     <!--Link for Tab ICON-->
     <link rel="icon" type="image/x-icon" href="/LibMSv1/resources/images/logov1.png">
     <!--Link for Bootstrap-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/resources/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/LibMSv1/resources/bootstrap/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/LibMSv1/resources/bootstrap/js/bootstrap.min.js"></script>
     <!--Link for CSS File-->
     <link rel="stylesheet" type="text/css" href="/LibMSv1/users/admin/css/index.css">
+    <!--Link for NAVBAR and Sidebar CSS File-->
+    <link rel="stylesheet" type="text/css" href="/LibMSv1/users/admin/css/navbar-sidebar.css">
     <!--Link for Font Awesome Icons-->
     <link rel="stylesheet" href="/LibMSv1/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
     <!--Link for Google Font-->
@@ -255,19 +259,38 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
 <!--SIDEBAR END-->
 
 <!--PROFILE CARD START-->
-<div class="profcard">
-    <div class="card">
-        <img src="/LibMSv1/resources/images/user.png" style="width:100%">
-        <h3><?php echo $firstname. ' '. $lastname; ?></h3>
-        <p class="title">ID Number: <?php echo $idNo; ?></p>
-        <p><b><em>Account Role Type: <?php echo $acctype; ?></em></b></p>
-        <p class="profinfo">Username: </p>
-        <p><em><?php echo $username; ?></em></p>
-        <p class="profinfo">Email: </p>
-        <p><em><?php echo $email; ?></em></p>
-        <p><a href="/LibMSv1/users/admin/pages/profile/admininfo.php"><button>Account Info</button></a></p>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <!-- PROFILE CARD -->
+            <div class="card mb-4">
+                <img src="/LibMSv1/resources/images/user.png" style="width:100%" alt="User Profile Image">
+                <div class="card-body">
+                    <h5 class="card-title"><?php echo $firstname . ' ' . $lastname; ?></h5>
+                    <p class="card-text">ID Number: <i><?php echo $idNo; ?></i></p>
+                    <p class="card-text">Account Role Type: <i><?php echo $acctype; ?></i></p>
+                    <p class="card-text">Username: <i><?php echo $username; ?></i></p>
+                    <p class="card-text">Email: <i><?php echo $email; ?></i></p>
+                    <p class="card-text">Contact Number: <i><?php echo $con_num; ?></i></p>
+                    <a href="/LibMSv1/users/admin/pages/profile/admininfo.php" class="btn btn-primary">Account Info</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <!-- DASHBOARD STATISTICS CARD -->
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Dashboard Statistics</h5>
+                    <p class="card-text">Not Yet Available.</p>
+                    <!-- You can add charts, graphs, or any other statistics here -->
+                    <!-- For example, using JavaScript libraries like Chart.js -->
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+<!--DASHBOARD PROFILE CARD END-->
+
 <!--PROFILE CARD END-->
 
 <!--MAIN CARD START-->

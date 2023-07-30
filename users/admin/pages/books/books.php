@@ -1,3 +1,34 @@
+<?php
+session_start();
+
+$servername = "localhost"; // Replace with your server name if different
+$user_name = "root"; // Replace with your database username
+$Password = ""; // Replace with your database password
+$database = "libsys"; // Replace with your database name
+
+// Create a connection
+$conn = new mysqli($servername, $user_name, $Password, $database);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Check if the logout parameter is set
+if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
+    // Unset all session variables
+    $_SESSION = array();
+
+    // Destroy the session
+    session_destroy();
+
+    // Redirect to the login page
+    header('Location: /LibMSv1/main/login.php');
+    exit();
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,7 +79,7 @@
 
             <ul class="navbar-nav ms-auto">
               <li class="nav-item">
-                <a class="nav-link" href="#"><i class="fa-solid fa-right-from-bracket fa-xs"></i> Logout</a>
+                <a class="nav-link" href="?logout=true"><i class="fa-solid fa-right-from-bracket fa-xs"></i> Logout</a>
               </li>
             </ul>
 
@@ -174,7 +205,7 @@
 
         <ul class="logout">
             <li>
-               <a href="#">
+               <a href="?logout=true">
                      <i class="fa fa-right-from-bracket fa-md"></i>
                     <span class="nav-text">
                         Logout
@@ -189,8 +220,10 @@
     <div class="container">
         <hr>
             <div class="search-bar">
-                <input type="text" class="search" placeholder ="Enter Book Section, Book Name, or Book's Status..">
-                <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-search fa-sm"></i> Search</button>
+                <form method ="GET">
+                    <input type="text" class="search" placeholder ="Enter Book Section, Book Name, or Book's Status..">
+                    <button type="submit" name="search" class="btn btn-primary btn-sm"><i class="fa-solid fa-search fa-sm"></i> Search</button>
+                </form>
             </div>
             
 
@@ -241,32 +274,119 @@
                     <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-file-export fa-sm"></i> <i class="fa-solid fa-file-excel fa-sm"></i> Export Books Data to Excel</button>
                 </div>
             
+            <?php
+
+            if (isset($_GET['search'])) {
+                // Get the search query from the input field
+                $searchQuery = $_GET['search'];
+
+                // Modify the query to include the search condition
+                $query = "SELECT * FROM books WHERE
+                        ISBN LIKE '%$searchQuery%'
+                        OR book_name LIKE '%$searchQuery%'
+                        OR author LIKE '%$searchQuery%'
+                        OR year LIKE '%$searchQuery%'
+                        OR section LIKE '%$searchQuery%'
+                        OR availability LIKE '%$searchQuery%'";
+            } else {
+                // Default query to fetch all books
+                $query = "SELECT * FROM books ORDER BY book_id DESC";
+            }
+
+            function getBooksByPagination($conn, $query, $offset, $limit) {
+                $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
+                $result = mysqli_query($conn, $query);
+
+                return $result;
+            }
+
+            $totalBooksQuery = "SELECT COUNT(*) as total FROM books";
+            $totalBooksResult = mysqli_query($conn, $totalBooksQuery);
+            $totalBooks = mysqli_fetch_assoc($totalBooksResult)['total'];
+
+            // Number of books to display per page
+            $limit = 4;
+
+            // Get the current page number from the query parameter
+            $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+
+            // Calculate the offset for the current page
+            $offset = ($page - 1) * $limit;
+
+            // Get the books for the current page
+            $result = getBooksByPagination($conn, $query, $offset, $limit);
+
+            // Check if the query executed successfully
+            if ($result && mysqli_num_rows($result) > 0) {
+                echo '<div class="container">';
+                echo '<hr>';
+                echo '<table>';
+                echo '<thead>';
+                echo '<tr>';
+                echo '<th>ISBN</th>';
+                echo '<th>Book Name</th>';
+                echo '<th>Author</th>';
+                echo '<th>Year</th>';
+                echo '<th>Section</th>';
+                echo '<th>Stocks</th>';
+                echo '<th>Status</th>';
+                echo '<th>Action</th>';
+                echo '</tr>';
+                echo '</thead>';
+                echo '<tbody>';
+
+                while ($book = mysqli_fetch_assoc($result)) {
+                    echo '<tr>';
+                    echo '<td>' . $book['isbn'] . '</td>';
+                    echo '<td>' . $book['book_title'] . '</td>';
+                    echo '<td>' . $book['author'] . '</td>';
+                    echo '<td>' . $book['year'] . '</td>';
+                    echo '<td>' . $book['section'] . '</td>';
+                    echo '<td>' . $book['stocks'] . '</td>';
+                    if ($book['status'] == 'GOOD') {
+                        echo '<td style="color: green;"><b><i>' . $book['status'] . '</i></b></td>';
+                    } else if ($book['status'] == 'DAMAGED') {
+                        echo '<td style="color: orange;"><b><i>' . $book['status'] . '</i></b></td>';
+                    } else if ($book['status'] == 'DILAPITATED') {
+                        echo '<td style="color: red;"><b><i>' . $book['status'] . '</i></b></td>';
+                    } else {
+                        echo '<td style="color: grey;"><b><i>' . $book['status'] . '</i></b></td>';
+                    }
+                    echo '<td>';
+                    echo '<button type="button" class="btn btn-success btn-sm"><i class="fa-solid fa-circle-info fa-sm"></i> Details</button>';
+                    echo '</td>';
+                    echo '</tr>';
+                }
+
+                echo '</tbody>';
+                echo '</table>';
 
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>ISBN</th>
-                        <th>Book Name</th>
-                        <th>Author</th>
-                        <th>Year</th>
-                        <th>Section</th>
-                        <th>Availability</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <td>1</td>
-                    <td>The Handmaid's Tale</td>
-                    <td>Margaret Atwood</td>
-                    <td>1981</td>
-                    <td>Dystopian Fiction</td>
-                    <td>1</td>
-                    <td>
-                        <button type="button" class="btn btn-success btn-sm"><i class="fa-solid fa-circle-info fa-sm"></i> Details</button>
-                    </td>
-                </tbody>
-            </table>
+                // Calculate the total number of pages
+                $totalPages = ceil($totalBooks / $limit);
+
+                if ($totalPages > 1) {
+                    // Display previous and next buttons
+                    echo '<div class="pagination-buttons">';
+                    if ($page > 1) {
+                        echo '<a href="?page=' . ($page - 1) . '" class="btn btn-primary btn-sm" id="previous"><i class="fa-solid fa-angle-left"></i> Previous</a>';
+                    }
+                    if ($page < $totalPages) {
+                        echo '<a href="?page=' . ($page + 1) . '" class="btn btn-primary btn-sm" id="next">Next <i class="fa-solid fa-angle-right"></i></a>';
+                    }
+                    echo '</div>';
+                }
+
+                echo '</div>';
+            } else {
+                echo "<p><b>No books found.</b></p>";
+            }
+
+            // Close the database connection
+            mysqli_close($conn);
+
+            ?>
+
         </div>
 <!--TABLE END-->
 

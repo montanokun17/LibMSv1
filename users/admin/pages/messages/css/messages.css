@@ -27,3 +27,94 @@ tr:nth-child(even) {
 .btn-primary {
     margin-bottom: 5px;
 }
+
+/* messages.css */
+
+/* messages.css */
+
+/* Reset some default styles for better layout */
+body, h3, p, ul, li {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f1f1f1;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+}
+
+h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin-bottom: 20px;
+}
+
+.chat-inbox {
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.message-sender {
+    font-weight: bold;
+}
+
+.message-content {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #555;
+}
+
+.message-date-time {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #999;
+}
+
+.message-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.message-actions button {
+    margin-left: 5px;
+    font-size: 12px;
+    padding: 4px 8px;
+}
+
+/* Make buttons look like links */
+.message-actions button {
+    border: none;
+    background: none;
+    color: #007bff;
+    cursor: pointer;
+}
+
+/* Remove button focus outline */
+.message-actions button:focus {
+    outline: none;
+}
+
+/* Style button on hover */
+.message-actions button:hover {
+    text-decoration: underline;
+}

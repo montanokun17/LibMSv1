@@ -1,0 +1,27 @@
+/*FORM CARD*/
+
+.title {
+    margin-top: 20px;
+}
+
+.col-md-6 {
+    margin-left: 420px;
+    margin-top: 30px;
+}
+
+form {
+    align-content: center;
+    margin-top: 20px;
+    font-size: 12px;
+    padding: 20px;
+}
+
+label {
+    padding-bottom: 10px;
+}
+
+input {
+    margin-bottom: 15px;
+    padding: 5px;
+    width: 70%;
+}

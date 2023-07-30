@@ -1,3 +1,61 @@
+<?php
+session_start(); // Start the session
+
+$servername = "localhost";
+$user_name = "root";
+$password = "";
+$database = "libsys";
+
+// Create a connection
+$conn = new mysqli($servername, $user_name, $password, $database);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$firstname = "";
+$lastname = "";
+$username = "";
+$email = "";
+
+if ($_SESSION['acctype'] === 'admin') {
+    $idNo = $_SESSION['id_no'];
+    $username = $_SESSION['username'];
+
+    // Prepare and execute the SQL query
+    $query = "SELECT * FROM users WHERE id_no = ? AND username = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ss", $idNo, $username);
+    $stmt->execute();
+
+    // Fetch the result
+    $result = $stmt->get_result();
+    if ($result->num_rows === 1) {
+        $row = $result->fetch_assoc();
+
+        // Retrieve the user's information
+        $firstname = $row['firstname'];
+        $lastname = $row['lastname'];
+        $idNo = $row['id_no'];
+        $email = $row['email'];
+    }
+}
+
+// Check if the logout parameter is set
+if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
+    // Unset all session variables
+    $_SESSION = array();
+
+    // Destroy the session
+    session_destroy();
+
+    // Redirect to the login page
+    header('Location: /LibMSv1/main/login.php');
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,7 +107,7 @@
 
             <ul class="navbar-nav ms-auto">
               <li class="nav-item">
-                <a class="nav-link" href="#"><i class="fa-solid fa-right-from-bracket fa-xs"></i> Logout</a>
+                <a class="nav-link" href="?logout=true"><i class="fa-solid fa-right-from-bracket fa-xs"></i> Logout</a>
               </li>
             </ul>
 
@@ -175,7 +233,7 @@
 
         <ul class="logout">
             <li>
-               <a href="#">
+               <a href="?logout=true">
                      <i class="fa fa-right-from-bracket fa-md"></i>
                     <span class="nav-text">
                         Logout
@@ -220,9 +278,9 @@
                             </span>
                         </li> 
 
-                        <a href="#">
+                        <a href="/LibMSv1/users/admin/func/a_email_pin.php">
                             <li class="btn-sett">
-                                <button type="button" class="btn btn-warning"><i class="fa-solid fa-lock"></i> Change Password</button>
+                                <button type="submit" class="btn btn-warning"><i class="fa-solid fa-lock"></i> Change Password</button>
                             </li>
                         </a>
 

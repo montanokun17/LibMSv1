@@ -6,18 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Messages</title>
     <!--Link for Tab ICON-->
-    <link rel="icon" type="image/x-icon" href="/LiLibMSv1/resources/images/logov1.png">
+    <link rel="icon" type="image/x-icon" href="/LibMSv1/resources/images/logov1.png">
     <!--Link for Bootstrap-->
-    <link rel="stylesheet" type="text/css" href="/LiLibMSv1/resources/bootstrap/css/bootstrap.min.css"/>
-    <script type="text/javascript" src="/LiLibMSv1/resources/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/LibMSv1/resources/bootstrap/css/bootstrap.min.css"/>
+    <script type="text/javascript" src="/LibMSv1/resources/bootstrap/js/bootstrap.min.js"></script>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LiLibMSv1/users/admin/pages/messages/css/messages.css">
+    <link rel="stylesheet" type="text/css" href="/LibMSv1/users/admin/pages/messages/css/messages.css">
     <!--Link for NAVBAR and Sidebar CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LiLibMSv1/users/admin/css/navbar-sidebar.css">
+    <link rel="stylesheet" type="text/css" href="/LibMSv1/users/admin/css/navbar-sidebar.css">
     <!--Link for Font Awesome Icons-->
-    <link rel="stylesheet" href="/LiLibMSv1/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
+    <link rel="stylesheet" href="/LibMSv1/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
     <!--Link for Google Font-->
-    <link rel="stylesheet" href="/LiLibMSv1/resources/fonts/fonts.css"/>
+    <link rel="stylesheet" href="/LibMSv1/resources/fonts/fonts.css"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </head>
 
@@ -185,47 +186,41 @@
     </nav>
 <!--SIDEBAR END-->
     
-    <!--MAIN BOX START-->
-        <div class="container">
-            <h3>Messages</h3>
-            <hr>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Sender</th>
-                        <th>ID Number</th>
-                        <th>Message</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags, CSS and other links -->
+</head>
+<body>
+    <!-- Navbar HTML -->
+    <!-- Sidebar HTML -->
 
-                <tbody>
-                    <tr>
-                        <td>John Doe</td>
-                        <td>#001</td>
-                        <td>
-                        <em>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempor euismod augue, 
-                            at interdum risus sagittis et. Nam viverra pulvinar mauris.
-                        </em>
-                        </td>
-                        <td><em><b>04/08/2023</b></em></td>
-                        <td><em><b>10:30 AM</b></em></td>
-                        <td>
-
-                        <a href="/LibMSv1/users/admin/pages/messages/reply.php">
-                            <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-reply"></i> Reply</button>
-                        </a>
-
-                        <button type="button" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</button>
-
-                    </td>
-                    </tr>
-                </tbody>
-            </table>
+     <!-- Main Box Start -->
+     <div class="container">
+        <div class="chat-inbox">
+            <!-- Single Message -->
+            <div class="message">
+                <div class="message-sender">
+                    <strong>John Doe</strong> (#001)
+                </div>
+                <div class="message-content">
+                    <em>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempor euismod augue, at interdum risus sagittis et. Nam viverra pulvinar mauris.
+                    </em>
+                </div>
+                <div class="message-date-time">
+                    <em><b>Date:</b> 04/08/2023</em>
+                    <em><b>Time:</b> 10:30 AM</em>
+                </div>
+                <div class="message-actions">
+                    <a href="/LibMSv1/users/admin/pages/messages/reply.php">
+                        <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-reply"></i> Reply</button>
+                    </a>
+                    <button type="button" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</button>
+                </div>
+            </div>
+            <!-- End of Single Message -->
         </div>
-    <!--MAIN BOX START-->
+    </div>
 </body>
 </html>

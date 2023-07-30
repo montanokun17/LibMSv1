@@ -1,10 +1,10 @@
 <?php
 session_start(); // Start the session
 
-$servername = "localhost"; // Replace with your server name if different
-$user_name = "root"; // Replace with your database username
-$password = ""; // Replace with your database password
-$database = "libsys"; // Replace with your database name
+$servername = "localhost";
+$user_name = "root";
+$password = "";
+$database = "libsys";
 
 // Create a connection
 $conn = new mysqli($servername, $user_name, $password, $database);
@@ -13,47 +13,77 @@ $conn = new mysqli($servername, $user_name, $password, $database);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
- 
 
-// Initialize variables with default values
-$firstname = "";
-$lastname = "";
-$acctype = "";
-$email = "";
-$idNo = "";
-$username = "";
+if (isset($_SESSION['acctype']) && $_SESSION['acctype'] === 'student') {
+    // User logged in or just registered as a student
 
-if ($_SESSION['acctype'] === 'admin') {
+    if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
+        $idNo = $_SESSION['id_no'];
+        $username = $_SESSION['username'];
 
-    $idNo = $_SESSION['id_no'];
-    $username = $_SESSION['username'];
+        // Prepare and execute the SQL query
+        $query = "SELECT * FROM users WHERE id_no = ? AND username = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("ss", $idNo, $username);
+        $stmt->execute();
 
-    // Prepare and execute the SQL query
-    $query = "SELECT * FROM users WHERE id_no = ? AND username = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("ss", $idNo, $username);
-    $stmt->execute();
+        // Fetch the result
+        $result = $stmt->get_result();
+        if ($result->num_rows === 1) {
+            $row = $result->fetch_assoc();
 
-    // Fetch the result
-    $result = $stmt->get_result();
-    if ($result->num_rows === 1) {
-        $row = $result->fetch_assoc();
+            // Retrieve the user's information
+            $firstname = $row['firstname'];
+            $lastname = $row['lastname'];
+            $acctype = $row['acctype'];
+            $email = $row['email'];
+            $brgy = $row['brgy'];
+            $con_num = $row['con_num'];
 
-        // Retrieve the user's information
-        $firstname = $row['firstname'];
-        $lastname = $row['lastname'];
-        $idNo = $row['id_no'];
-        $acctype = $row['acctype'];
-        $username = $row['username'];
-        $email = $row['email'];
-        
+            // Update the session variables with fetched data (optional, in case there are changes in the database)
+            $_SESSION['firstname'] = $firstname;
+            $_SESSION['lastname'] = $lastname;
+            $_SESSION['acctype'] = $acctype;
+            $_SESSION['email'] = $email;
+            $_SESSION['brgy'] = $brgy;
+            $_SESSION['con_num'] = $con_num;
+
+        } else {
+            // Handle case when user is not found
+            // For example, redirect to an error page or display an error message
+            echo "User not found!";
+        }
     } else {
-        // Handle case when user is not found
-        // For example, redirect to an error page or display an error message
-        echo "User not found!";
+        // Handle case when session data is missing
+        // For example, redirect to a login page or display an error message
+        echo "Session data missing or user not logged in!";
     }
+
+} else {
+    // User is not a student or not logged in
+    // Redirect to a login page or display an error message
+    echo "User is not logged in as a student!";
 }
 ?>
+
+
+
+<?php
+
+// Check if the logout parameter is set
+if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
+    // Unset all session variables
+    $_SESSION = array();
+
+    // Destroy the session
+    session_destroy();
+
+    // Redirect to the login page
+    header('Location: /LibMSv1/main/login.php');
+    exit();
+}
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -70,7 +100,7 @@ if ($_SESSION['acctype'] === 'admin') {
     <!--Link for CSS of Navbar and Sidebar-->
     <link rel="stylesheet" type="text/css" href="/LibMSv1/users/students/css/navbar-sidebar.css"/>
     <!--Link for CSS File-->
-    <link rel="stylesheet" type="text/css" href="/LibMSv1/users/admin/css/index.css">
+    <link rel="stylesheet" type="text/css" href="/LibMSv1/users/students/css/index.css">
     <!--Link for Font Awesome Icons-->
     <link rel="stylesheet" href="/LibMSv1/resources/icons/fontawesome-free-6.4.0-web/css/all.css">
     <!--Link for Google Font-->
@@ -99,7 +129,7 @@ if ($_SESSION['acctype'] === 'admin') {
 
             <ul class="navbar-nav ms-auto">
               <li class="nav-item">
-                <a class="nav-link" href="#"><i class="fa-solid fa-right-from-bracket fa-xs"></i> Logout</a>
+                <a class="nav-link" href="?logout=true"><i class="fa-solid fa-right-from-bracket fa-xs"></i> Logout</a>
               </li>
             </ul>
 
@@ -182,7 +212,7 @@ if ($_SESSION['acctype'] === 'admin') {
 
         <ul class="logout">
             <li>
-               <a href="#">
+               <a href="?logout=true">
                      <i class="fa fa-right-from-bracket fa-md"></i>
                     <span class="nav-text">
                         Logout
@@ -193,21 +223,38 @@ if ($_SESSION['acctype'] === 'admin') {
     </nav>
 <!--SIDEBAR END-->
 
-    <!--PROFILE CARD START-->
-    <div class="profcard">
-      <div class="card">
-        <img src="/LibMSv1/resources/images/user.png" style="width:100%">
-        <h3><?php echo $firstname. ' '. $lastname; ?></h3>
-        <p class="title">ID Number: <?php echo $idNo; ?></p>
-        <p><b><em>Account Role Type: <?php echo $acctype?></em></b></p>
-        <p class="profinfo">Username: </p>
-        <p><em><?php echo $username?></em></p>
-        <p class="profinfo">Email: </p>
-        <p><em> <?php echo $email?></em></p>
-        <p><a href=""><button>Account Info</button></a></p>
-      </div>  
+<!--PROFILE CARD START-->
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <!-- PROFILE CARD -->
+            <div class="card mb-4">
+                <img src="/LibMSv1/resources/images/user.png" style="width:100%" alt="User Profile Image">
+                <div class="card-body">
+                    <h5 class="card-title"><?php echo $firstname . ' ' . $lastname; ?></h5>
+                    <p class="card-text">ID Number: <i><?php echo $idNo; ?></i></p>
+                    <p class="card-text">Account Role Type: <i><?php echo $acctype; ?></i></p>
+                    <p class="card-text">Username: <i><?php echo $username; ?></i></p>
+                    <p class="card-text">Email: <i><?php echo $email; ?></i></p>
+                    <p class="card-text">Contact Number: <i><?php echo $con_num; ?></i></p>
+                    <a href="/LibMSv1/users/students/" class="btn btn-primary">Account Info</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <!-- DASHBOARD STATISTICS CARD -->
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Dashboard Statistics</h5>
+                    <p class="card-text">Not Yet Available.</p>
+                    <!-- You can add charts, graphs, or any other statistics here -->
+                    <!-- For example, using JavaScript libraries like Chart.js -->
+                </div>
+            </div>
+        </div>
     </div>
-    <!--PROFILE CARD END-->
+</div>
+<!--DASHBOARD PROFILE CARD END-->
 
     <!--MAIN CARD START-->
       

@@ -1,0 +1,98 @@
+/* Custom CSS for the ID Card Dashboard */
+
+/* Adjust the container and card styles for the ID Card */
+.container {
+    padding-top: 30px;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0;
+}
+
+.card-footer {
+    border-radius: 0 0 10px 10px;
+}
+
+/* Center the user's name and role */
+.card-body .text-center {
+    margin-bottom: 20px;
+}
+
+.card-body img {
+    border: 3px solid #fff;
+    margin-top: -50px;
+}
+
+/* Style the user's details */
+.card-body p {
+    margin-bottom: 5px;
+}
+
+/* Style the "Edit Profile" button */
+.card-footer a.btn {
+    border-radius: 5px;
+    padding: 8px 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    text-decoration: none;
+}
+
+.card-footer a.btn:hover {
+    background-color: #0056b3;
+}
+
+/* Media query for responsive design */
+@media (max-width: 768px) {
+    .card-body .text-center img {
+        margin-top: -25px;
+        width: 80px;
+        height: 80px;
+    }
+}
+
+/* Custom CSS for ID Card Generator */
+
+/* ... (Previous CSS remains the same) ... */
+
+/* Style for the overlay and camera icon in the image-upload */
+.image-upload {
+    position: relative;
+    cursor: pointer;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    color: #fff;
+    font-size: 20px;
+    transition: opacity 0.3s ease;
+}
+
+.image-upload:hover .overlay {
+    opacity: 1;
+}
+
+/* Style for the QR code */
+.qr-code {
+    margin: 20px auto;
+    width: 150px;
+    height: 150px;
+    border: 3px solid #007bff;
+}
+
+/* ... (Remaining CSS remains the same) ... */

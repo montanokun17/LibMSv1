@@ -3,81 +3,92 @@
 session_start();
 
 $servername = "localhost"; // Replace with your server name if different
-$username = "root"; // Replace with your database username
+$user_name = "root"; // Replace with your database username
 $password = ""; // Replace with your database password
 $database = "libsys"; // Replace with your database name
 
 // Create a connection
-$conn = new mysqli($servername, $username, $password, $database);
+$conn = new mysqli($servername, $user_name, $password, $database);
 
 // Check the connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$command = 'python3 id_number.py';
-$id_number = exec($command);
-
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve form data
     $firstname = $_POST['firstname'];
     $lastname = $_POST['lastname'];
     $username = $_POST['username'];
     $email = $_POST['email'];
-    $password = md5($_POST['password']);
+    $con_num = $_POST['con_num'];
+    $password = $_POST['password'];
     $acctype = $_POST['acctype'];
     $schlvl = $_POST['schlvl'];
+    $brgy = $_POST['brgy'];
 
-    // Prepare and bind the SQL query with placeholders
-    $stmt = $conn->prepare("INSERT INTO users (username, firstname, lastname, email, con_num, password, acctype, schlvl, status) 
-                            VALUES (?, ?, ?, ?, ?, ?, ?, 'Active')");
-    $stmt->bind_param("sssssss", $username, $firstname, $lastname, $email, $con_num, $password, $acctype, $schlvl);
+    // Prepare and bind the SQL query to check if email already exists
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? and con_num = ?");
+    $stmt->bind_param("ss", $email, $con_num);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if ($stmt->execute()) {
-        // Data insertion successful
-        echo "<script>alert('Account created successfully.');</script>";
+    if ($result->num_rows > 0) {
+        // Email already exists in the database
+        echo "<script>alert('Email or Contact Number is already in use. Please choose a different one.');</script>";
+    } else {
+        // Email does not exist, proceed with account creation
 
-        // Prepare and bind the SQL query to check the user's account
-        $stmt = $conn->prepare("SELECT * FROM users WHERE username = ? AND password = ?");
-        $stmt->bind_param("ss", $username, $password);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        // Hash the password using bcrypt
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-        if ($result->num_rows === 1) {
-            $row = $result->fetch_assoc();
-            $acctype = $row['acctype'];
+        // Prepare and bind the SQL query with placeholders
+        $stmt = $conn->prepare("INSERT INTO users (username, firstname, lastname, email, con_num, password, acctype, schlvl, brgy, status) 
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Active')");
+        $stmt->bind_param("sssssssss", $username, $firstname, $lastname, $email, $con_num, $hashedPassword, $acctype, $schlvl, $brgy);
 
-            // Check the user's account type and redirect accordingly
+        // Execute the prepared statement
+        if ($stmt->execute()) {
+            // Data insertion successful
+            echo "<script>alert('Account created successfully.');</script>";
+
+            // Get the inserted user's ID from the database
+            $idNo = $stmt->insert_id;
+
+            // Set up session data for future login
+            $_SESSION['acctype'] = $acctype;
+            $_SESSION['id_no'] = $idNo;
+            $_SESSION['username'] = $username;
+
+            // Redirect to appropriate page based on the user's account type
             if ($acctype === 'admin') {
                 // Redirect to the admin page
                 header('Location: /LibMSv1/users/admin/index.php');
                 exit();
             } elseif ($acctype === 'student') {
-                // Redirect to the student page
                 header('Location: /LibMSv1/users/students/index.php');
                 exit();
             } elseif ($acctype === 'librarian') {
                 // Redirect to the librarian page
                 header('Location: librarian-page.php');
                 exit();
-            } elseif ($acctype === 'staff') {
-                // Redirect to the staff page
-                header('Location: staff-page.php');
+            } elseif ($acctype === 'guest') {
+                // Redirect the user to the student portal after successful registration
+                header('Location: /LibMSv1/users/students/index.php');
                 exit();
             }
+        } else {
+            // Error occurred while inserting data
+            echo "<script>alert('Error: " . $stmt->error . "');</script>";
         }
-    } else {
-        // Error occurred while inserting data
-        echo "<script>alert('Error: " . $stmt->error . "');</script>";
+
+        // Close the prepared statement
+        $stmt->close();
     }
-
-    // Close the prepared statement
-    $stmt->close();
-
-    // Close the database connection
-    $conn->close();
 }
+
+// Close the database connection
+$conn->close();
 ?>
 
 
@@ -92,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!--Link for Tab ICON-->
     <link rel="icon" type="image/x-icon" href="/LibMSv1/resources/images/logov1.png">
     <!--Link for Bootstrap-->
-    <link rel="stylesheet" type="text/css" href="/LibMS/resources/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/LibMSv1/resources/bootstrap/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/LibMSv1/resources/bootstrap/js/bootstrap.min.js"></script>
     <!--Link for CSS File-->
     <link rel="stylesheet" type="text/css" href="/LibMSv1/main/css/signup.css">
@@ -121,28 +132,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             <div class="form-group"><input type="password" Name="password" id="password" placeholder="Password" required=""></div>
                                             <label for="acctype">Account Type: </label>
                                                 <select name="acctype" class="form-select" id="acctype">
-                                                    <option selected></option>
+                                                    <option selected disabled>Select Account Type</option>
                                                     <option value="student">Student</option>
                                                     <option value="librarian">Librarian</option>
-                                                    <option value="staff">Staff</option>
+                                                    <option value="guest">Guest</option>
                                                 </select>
 
                                             
-                                              <label for="schlvl">School Level: </label>
+                                            <label for="schlvl">School Level: </label>
                                                 <select name="schlvl" class="form-select" id="schlvl">
-                                                    <option selected></option>
+                                                    <option selected disabled>Select School Level</option>
                                                     <option value="Elementary">Elementary</option>
                                                     <option value="Junior High School">Jr. High School</option>
                                                     <option value="Senior High School">Sr. High School</option>
+                                                    <option value="College">College</option>
                                                     <option value="Graduate">Graduate</option>
+                                                    <option value="Guest">Guest</option>
                                                 </select>
+
+                                            
+                                                <label for="brgy">Barangay: </label>
+                                                    <select name="brgy" class="form-select" id="brgy">
+                                                        <option selected disabled>Select a Barangay</option>
+                                                        <option value="Bagong Ilog">Bagong Ilog</option>
+                                                        <option value="Bagong Katipunan">Bagong Katipunan</option>
+                                                        <option value="Bambang">Bambang</option>
+                                                        <option value="Buting">Buting</option>
+                                                        <option value="Caniogan">Caniogan</option>
+                                                        <option value="Dela Paz">Dela Paz</option>
+                                                        <option value="Kalawaan">Kalawaan</option>
+                                                        <option value="Kapasigan">Kapasigan</option>
+                                                        <option value="Kapitolyo">Kapitolyo</option>
+                                                        <option value="Malinao">Malinao</option>
+                                                        <option value="Manggahan">Manggahan</option>
+                                                        <option value="Maybunga">Maybunga</option>
+                                                        <option value="Orando">Orando</option>
+                                                        <option value="Palatiw">Palatiw</option>
+                                                        <option value="Pinagbuhatan">Pinagbuhatan</option>
+                                                        <option value="Pineda">Pineda</option>
+                                                        <option value="Rosario">Rosario</option>
+                                                        <option value="Sagad">Sagad</option>
+                                                        <option value="San Antonio">San Antonio</option>
+                                                        <option value="San Joaquin">San Joaquin</option>
+                                                        <option value="San Jose">San Jose</option>
+                                                        <option value="San Miguel">San Miguel</option>
+                                                        <option value="San Nicolas">San Nicolas</option>
+                                                        <option value="Santa Cruz">Santa Cruz</option>
+                                                        <option value="Santa Lucia">Santa Lucia</option>
+                                                        <option value="Santa Rosa">Santa Rosa</option>
+                                                        <option value="Santo Tomas">Santo Tomas</option>
+                                                        <option value="Santolan">Santolan</option>
+                                                        <option value="Sumilang">Sumilang</option>
+                                                        <option value="Ugong">Ugong</option>
+                                                    </select>
+
 
                                               <script>
                                                 var acctype = document.getElementById("acctype");
                                                 var schlvl = document.getElementById("schlvl");
 
                                                 acctype.addEventListener("change", function() {
-                                                if (acctype.value === "librarian" || acctype.value === "staff") {
+                                                if (acctype.value === "librarian" || acctype.value === "guest") {
                                                     schlvl.disabled = true;
                                                     schlvl.selectedIndex = 0; // clears the selection of the schlvl dropdown
                                                 } else {
@@ -173,3 +223,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
 </body>
 </html>
+

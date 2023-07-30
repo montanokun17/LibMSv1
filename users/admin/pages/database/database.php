@@ -229,10 +229,10 @@
 
                         <li class="box-item">
                             <span class="span-item">
-                                <b>Redirect to MariaDB SQL Database Webpage: </b>&nbsp;
+                                <b>Redirect to phpMyAdmin Webpage: </b>&nbsp;
                             </span>
                             <span class="span-info">
-                                <em> Open the webpage of the LMS SQL Database. (Note: Make sure or check if the XAMPP Apache & MySQL were enabled or open to access the site)</em>
+                                <em> Open the webpage of the LMS SQL Database. (Note: Make sure or check if the XAMPP Apache & MySQL were enabled to access the site)</em>
                             </span>
                         </li> 
 

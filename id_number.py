@@ -1,5 +1,5 @@
 class Account:
-    last_id = 100003  # Last registered account ID number
+    last_id = 100002  # Last registered account ID number
     
     def __init__(self, account_type):
         self.account_type = account_type

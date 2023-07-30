@@ -200,6 +200,7 @@
                                             <div class="form-group"><input type="text" Name="lastname" id="lastname" placeholder="Last Name" required=""></div>
                                             <div class="form-group"><input type="text" Name="username" id="username" placeholder="Username" required=""></div>
                                             <div class="form-group"><input type="text" Name="email" id="email" placeholder="Email" required=""></div>
+                                            <div class="form-group"><input type="text" Name="con_num" id="con_num" placeholder="Contact Number" required=""></div>
                                             <div class="form-group"><input type="password" Name="password" id="password" placeholder="Password" required=""></div>
                                             <div class="form-group"><input type="password" Name="confirm_password" id="confirm_password" placeholder="Confirm Password" required=""></div>
                                             <?php

@@ -216,7 +216,7 @@
                             <br>
 
                             <li class="btn-qr">
-                                <a href="#">
+                                <a href="/LibMSv1/users/admin/pages/qrpages/qrgenerator.php">
                                     <button type="button" class="btn btn-primary"><i class="fa-solid fa-qrcode"></i> QR Generator</button>
                                 </a>
                             </li>
@@ -230,7 +230,7 @@
                             <br>
 
                             <li class="btn-qr">
-                                <a href="#">
+                                <a href="/LibMSv1/users/admin/pages/id-generator/id-card.php">
                                     <button type="button" class="btn btn-primary"><i class="fa-solid fa-id-card"></i> ID Card Generator</button>
                                 </a>
                             </li>

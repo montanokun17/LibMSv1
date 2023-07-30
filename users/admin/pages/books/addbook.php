@@ -1,3 +1,61 @@
+<?php
+session_start(); // Start the session
+
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "libsys";
+
+// Create a connection
+$conn = new mysqli($servername, $username, $password, $database);
+
+// Check the connection
+if ($conn->connect_error) {
+    echo '<script>alert("Connection failed: ' . $conn->connect_error . '");</script>';
+}
+
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Check if all required fields are filled
+    if (isset($_POST["section"]) && isset($_POST["Status"]) && isset($_POST["subject"]) && isset($_POST["book_title"]) && isset($_POST["volumes"]) && isset($_POST["year"]) && isset($_POST["availability"]) && isset($_POST["author"]) && isset($_POST["isbn"])) {
+        // Prepare and bind the SQL statement
+        $stmt = $conn->prepare("INSERT INTO books (section, status, subject, book_title, volume, year, stocks, author, isbn) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssssiss", $_POST["section"], $_POST["Status"], $_POST["subject"], $_POST["book_title"], $_POST["volumes"], $_POST["year"], $_POST["availability"], $_POST["author"], $_POST["isbn"]);
+
+        // Execute the statement
+        if ($stmt->execute()) {
+            header("Location: /LibMSv1/users/admin/pages/books/addbook.php");
+            echo '<script>alert("Book added successfully!");</script>';
+        } else {
+            echo '<script>alert("Error adding book: ' . $stmt->error . '");</script>';
+        }
+
+        // Close the statement
+        $stmt->close();
+    } else {
+        echo '<script>alert("Please fill all the required fields.");</script>';
+    }
+}
+
+?>
+
+<?php
+
+// Check if the logout parameter is set
+if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
+    // Unset all session variables
+    $_SESSION = array();
+
+    // Destroy the session
+    session_destroy();
+
+    // Redirect to the login page
+    header('Location: /LibMSv1/main/login.php');
+    exit();
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,7 +106,7 @@
 
             <ul class="navbar-nav ms-auto">
               <li class="nav-item">
-                <a class="nav-link" href="#"><i class="fa-solid fa-right-from-bracket fa-xs"></i> Logout</a>
+                <a class="nav-link" href="?logout=true"><i class="fa-solid fa-right-from-bracket fa-xs"></i> Logout</a>
               </li>
             </ul>
 
@@ -174,7 +232,7 @@
 
         <ul class="logout">
             <li>
-               <a href="#">
+               <a href="?logout=true">
                      <i class="fa fa-right-from-bracket fa-md"></i>
                     <span class="nav-text">
                         Logout
@@ -189,37 +247,37 @@
         <div class="container">
         <hr>
         
-        <form action="POST">   
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">   
                 <div class="container">
                     <div class="dropdown1">
                         <label for="booksection">Select Section: </label>
-                        &nbsp;&nbsp;
+                        &nbsp;&nbsp;                       
                         <select name="section" id="bsection">
                             <option></option>
-                            <option value="fiction">Fiction</option>
-                            <option value="mysthril">Mystery/Thriller</option>
-                            <option value="rom">Romance</option>
-                            <option value="scififan">Science Fiction/Fantasy</option>
-                            <option value="horror">Horror</option>
-                            <option value="hisfic">Historical Fiction</option>
-                            <option value="bioauto">Biography/Autobiography</option>
-                            <option value="mem">Memoir</option>
-                            <option value="his">History</option>
-                            <option value="politics">Politics and Current Events</option>
-                            <option value="scitech">Science and Technology</option>
-                            <option value="busifin">Business and Finance</option>
-                            <option value="perdev">Self-Help and Personal Development</option>
-                            <option value="artarchi">Art and Architecture</option>
-                            <option value="traveladv">Travel and Adventure</option>
-                            <option value="cookbooks">Cookbooks and Food Writing</option>
-                            <option value="yngadultfic">Young Adult Fiction</option>
-                            <option value="grapnovcomics">Graphic Novels and Comics</option>
-                            <option value="poetry">Poetry</option>
-                            <option value="religion">Religion and Spiritually</option>
-                            <option value="philo">Philosophy</option>
-                            <option value="refdic">Reference and Dictionary</option>
-                            <option value="forlang">Foreign Languages</option>
-                            <option value="others">Others</option>
+                            <option value="Art and Architecture">Art and Architecture</option>
+                            <option value="Biography/Autobiography">Biography/Autobiography</option>
+                            <option value="Business and Finance">Business and Finance</option>
+                            <option value="Cookbooks and Food Writing">Cookbooks and Food Writing</option>
+                            <option value="Fiction">Fiction</option>
+                            <option value="Foreign Languages">Foreign Languages</option>
+                            <option value="Graphic Novels and Comics">Graphic Novels and Comics</option>
+                            <option value="History">History</option>
+                            <option value="Historical Fiction">Historical Fiction</option>
+                            <option value="Horror">Horror</option>
+                            <option value="Memoir">Memoir</option>
+                            <option value="Mystery Thriller">Mystery/Thriller</option>
+                            <option value="Others">Others</option>
+                            <option value="Philosophy">Philosophy</option>
+                            <option value="Politics and Current Events">Politics and Current Events</option>
+                            <option value="Poetry">Poetry</option>
+                            <option value="Reference and Dictionary">Reference and Dictionary</option>
+                            <option value="Religion and Spiritually">Religion and Spiritually</option>
+                            <option value="Romance">Romance</option>
+                            <option value="Science and Technology">Science and Technology</option>
+                            <option value="Science Fiction/Fantasy">Science Fiction/Fantasy</option>
+                            <option value="Self-Help and Personal Development">Self-Help and Personal Development</option>
+                            <option value="Travel and Adventure">Travel and Adventure</option>
+                            <option value="Young Adult Fiction">Young Adult Fiction</option>
                         </select>
 
                         <label for="bookstatus" id="dropdown2">Select Book Status: </label>
