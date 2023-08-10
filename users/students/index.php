@@ -123,7 +123,7 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
                 <a class="nav-link active" aria-current="page" href="/LibMSv1/users/students/index.php"><i class="fa-solid fa-user fa-xs"></i> Profile Card</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/LibMSv1/users/"><i class="fa-solid fa-book-open fa-sm"></i> Books</a>
+                <a class="nav-link" href="/LibMSv1/users/students/books/books.php"><i class="fa-solid fa-book-open fa-sm"></i> Books</a>
               </li>
             </ul>
 
@@ -174,7 +174,7 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
                </a>
            </li>
            <li>
-            <a href="">
+            <a href="/LibMSv1/users/students/books/books.php">
                 <i class=" fa fa-solid fa-book fa-md"></i>
                  <span class="nav-text">
                      Books

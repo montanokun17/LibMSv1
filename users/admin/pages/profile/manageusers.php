@@ -332,9 +332,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                         <option value="staff">Staff</option>
                         <option value="student">Student</option>
                     </select>
+                    &nbsp;
                 
 
-                <label for="status" id="dropdown2"><i class="fa-solid fa-filter"></i> <b>Filter Status: </b></label>
+                <label for="status" id="dropdown2"><i class="fa-solid fa-filter fa-sm"></i> <b>Filter Status: </b></label>
                     <select name="status" id="status">
                         <option selected disabled>Select Status</option>
                         <option value="Active">Active</option>
@@ -469,44 +470,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                     $totalPages = ceil($totalUsers / $limit);
 
                     if ($totalPages > 1) {
-                        // Display previous and next buttons
                         echo '
                         <div class="pagination-buttons">
-                            <a href="?page='.($page - 1).'" class="btn btn-primary btn-sm" id="previous"><i class="fa-solid fa-angle-left"></i> Previous</a>
-                            <a href="?page='.($page + 1).'" class="btn btn-primary btn-sm" id="next">Next <i class="fa-solid fa-angle-right"></i></a>
+                            ';
+                
+                        if ($page > 1) {
+                            echo '<a href="?page='.($page - 1).'" class="btn btn-primary btn-sm" id="previous"><i class="fa-solid fa-angle-left"></i> Previous</a>';
+                        }
+                
+                        if ($page < $totalPages) {
+                            echo '<a href="?page='.($page + 1).'" class="btn btn-primary btn-sm" id="next">Next <i class="fa-solid fa-angle-right"></i></a>';
+                        }
+                
+                        echo '
                         </div>
                         ';
                     }
-
                 } else {
                     echo "No users found.";
                 }
                 ?>
 
+                
                 <script>
                     // JavaScript function for handling pagination buttons
                     document.addEventListener("DOMContentLoaded", function () {
                         const previousBtn = document.getElementById("previous");
                         const nextBtn = document.getElementById("next");
 
-                        previousBtn.addEventListener("click", function () {
-                            // Go to the previous page by decrementing the current page number
-                            let currentPage = parseInt("<?php echo $page; ?>");
-                            if (currentPage > 1) {
-                                currentPage--;
-                                window.location.href = "?page=" + currentPage;
-                            }
-                        });
+                        if (previousBtn) {
+                            previousBtn.addEventListener("click", function () {
+                                // Go to the previous page by decrementing the current page number
+                                let currentPage = parseInt("<?php echo $page; ?>");
+                                if (currentPage > 1) {
+                                    currentPage--;
+                                    window.location.href = "?page=" + currentPage;
+                                }
+                            });
+                        }
 
-                        nextBtn.addEventListener("click", function () {
-                            // Go to the next page by incrementing the current page number
-                            let currentPage = parseInt("<?php echo $page; ?>");
-                            let totalPages = parseInt("<?php echo $totalPages; ?>");
-                            if (currentPage < totalPages) {
-                                currentPage++;
-                                window.location.href = "?page=" + currentPage;
-                            }
-                        });
+                        if (nextBtn) {
+                            nextBtn.addEventListener("click", function () {
+                                // Go to the next page by incrementing the current page number
+                                let currentPage = parseInt("<?php echo $page; ?>");
+                                let totalPages = parseInt("<?php echo $totalPages; ?>");
+                                if (currentPage < totalPages) {
+                                    currentPage++;
+                                    window.location.href = "?page=" + currentPage;
+                                }
+                            });
+                        }
                     });
                 </script>
 
