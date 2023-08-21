@@ -16,13 +16,14 @@ CREATE TABLE users (
     ,"Malinao","Manggahan","Maybunga","Orando","Palatiw","Pinagbuhatan","Pineda","Rosario","Sagad","San Antonio","San Joaquin",
     "San Jose","San Miguel","San Nicolas","Santa Cruz","Santa Lucia","Santa Rosa","Santo Tomas","Santolan","Sumilang","Ugong") NOT NULL,
     status ENUM("Active", "Disabled") NOT NULL,
+    deleted INT NOT NULL,
     token_pin INT NOT NULL,
     pin_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO users(id_no,username,email,con_num,firstname,lastname,password,acctype,schlvl,brgy, status)
-VALUES ('100001','admin','mylibrolibrarymanagementsystem@gmail.com','09154985773','MyLibro','Administrator','admin01','admin','','','Active'),
-       ('100002','librarian','','09154985773','Librarian','Librarian LibMS','librarian01','librarian','','','Active');
+INSERT INTO users(id_no,username,email,con_num,firstname,lastname,password,acctype,schlvl,brgy, status,deleted)
+VALUES ('100001','admin','mylibrolibrarymanagementsystem@gmail.com','09154985773','MyLibro','Administrator','admin01','admin','','','Active','0'),
+       ('100002','librarian','','09154985773','Librarian','Librarian LibMS','librarian01','librarian','','','Active','0');
 
 
 CREATE TABLE id_card (
@@ -66,7 +67,8 @@ CREATE TABLE books (
     stocks INT NOT NULL,
     author VARCHAR(100) NOT NULL,
     isbn VARCHAR(100) NOT NULL,
-    status ENUM("GOOD","DAMAGED","LOST","DILAPITATED") NOT NULL
+    status ENUM("GOOD","DAMAGED","LOST","DILAPITATED") NOT NULL,
+    deleted INT NOT NULL
 );
 
 CREATE TABLE borrower (

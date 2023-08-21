@@ -11,9 +11,8 @@ $conn = new mysqli($servername, $username, $password, $database);
 
 // Check the connection
 if ($conn->connect_error) {
-    echo '<script>alert("Connection failed: ' . $conn->connect_error . '");</script>';
+    die("Connection failed: " . $conn->connect_error);
 }
-
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -32,63 +31,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $row = $result->fetch_assoc();
         $hashedPassword = $row['password'];
         $acctype = $row['acctype'];
+        $status = $row['status']; // Assuming you have a 'status' column for user status
 
-        // Set up session data for future login
-        $_SESSION['acctype'] = $row['acctype'];
-        $_SESSION['id_no'] = $row['id_no'];
-
-
-        // Check if the input password matches the hashed password
-        if (md5($password) === $hashedPassword || $hashedPassword = password_hash($password, PASSWORD_BCRYPT)) {
-            // Store user data in the session
-            $_SESSION['username'] = $username;
-            $_SESSION['acctype'] = $acctype;
-            $_SESSION['id_no'] = $idNo;
-
-            // Check the user's account type and redirect accordingly
-            if ($acctype === 'Admin') {
-                // Redirect to the admin page
-                header('Location: /LibMSv1/users/admin/index.php');
-                exit();
-            } elseif ($acctype === 'Student') {
-                // Redirect to the student page
-                header('Location: /LibMSv1/users/students/index.php');
-                exit();
-            } elseif ($acctype === 'Librarian') {
-                // Redirect to the librarian page
-                header('Location: librarian-page.php');
-                exit();
-            }
-        } elseif ($password === $hashedPassword) {
-            // Store user data in the session for unhashed password
-            $_SESSION['username'] = $username;
-            $_SESSION['acctype'] = $acctype;
-            $_SESSION['id_no'] = $idNo;
-
-            // Password matches plaintext (unhashed) password in the database
-            // You may consider hashing the plaintext password here before storing it in the database
-
-            // Check the user's account type and redirect accordingly
-            if ($acctype === 'Admin') {
-                // Redirect to the admin page
-                header('Location: /LibMSv1/users/admin/index.php');
-                exit();
-            } elseif ($acctype === 'Student') {
-                // Redirect to the student page
-                header('Location: /LibMSv1/users/students/index.php');
-                exit();
-            } elseif ($acctype === 'Librarian') {
-                // Redirect to the librarian page
-                header('Location: librarian-page.php');
-                exit();
-            } elseif ($acctype === 'Guset') {
-                // Redirect to the staff page
-                header('Location: guest-page.php');
-                exit();
-            }
+        if ($status === 'Disabled') {
+            echo '<script>alert("Login Failed, User Account is Disabled. Please Contact the Admin or the Librarian.");</script>';
         } else {
-            // Incorrect password
-            echo '<script>alert("Invalid Password!");</script>';
+            // Check if the input password matches the hashed password
+            if (md5($password) === $hashedPassword || $hashedPassword = password_hash($password, PASSWORD_BCRYPT)) {
+
+                // Store user data in the session
+                $_SESSION['username'] = $username;
+                $_SESSION['acctype'] = $acctype;
+                $_SESSION['id_no'] = $idNo;
+
+                // Redirect based on the user's account type
+                if ($acctype === 'Admin') {
+                    header('Location: /LibMSv1/users/admin/index.php');
+                } elseif ($acctype === 'Student') {
+                    header('Location: /LibMSv1/users/students/index.php');
+                } elseif ($acctype === 'Librarian') {
+                    header('Location: librarian-page.php');
+                } elseif ($acctype === 'Guest') {
+                    header('Location: guest-page.php');
+                }
+                exit();
+            } else {
+                // Incorrect password
+                echo '<script>alert("Invalid Password!");</script>';
+            }
         }
     } else {
         // Invalid input, account does not exist
@@ -99,8 +69,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->close();
 }
 
-
+// Close the connection
+$conn->close();
 ?>
+
+
 
 <script>
     if (window.history.replaceState) {
