@@ -36,7 +36,7 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student - Profile Card</title>
+    <title>Student - Books</title>
     <!--Link for Tab ICON-->
     <link rel="icon" type="image/x-icon" href="/LibMSv1/resources/images/logov1.png">
     <!--Link for Bootstrap-->
@@ -171,7 +171,6 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
 
 <!--TABLE START-->
     <div class="container">
-        <hr>
             <div class="search-bar">
                 <form method ="GET">
                     <input type="text" class="search" placeholder ="Enter Book Section, Book Name, or Book's Status..">
@@ -219,6 +218,46 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
                             <option value="DILAPITATED">DILAPITATED</option>
                             <option value="LOST">LOST</option>
                         </select>
+
+                        <script>
+                        // Get references to the select elements
+                        const sectionSelect = document.getElementById("bsection");
+                        const statusSelect = document.getElementById("bstatus");
+                        const bookListContainer = document.getElementById("bookList");
+
+                        // Add event listeners to the select elements
+                        sectionSelect.addEventListener("change", filterBooks);
+                        statusSelect.addEventListener("change", filterBooks);
+
+                        // Initial filtering
+                        filterBooks();
+
+                        function filterBooks() {
+                            // Get selected values
+                            const selectedSection = sectionSelect.value;
+                            const selectedStatus = statusSelect.value;
+
+                            // Get all book items
+                            const bookItems = document.querySelectorAll(".book-item");
+
+                            // Loop through book items and apply filter
+                            bookItems.forEach((bookItem) => {
+                                const bookSection = bookItem.getAttribute("data-section");
+                                const bookStatus = bookItem.getAttribute("data-status");
+
+                                // Check if the book matches the selected criteria
+                                const sectionMatch = selectedSection === "" || bookSection === selectedSection;
+                                const statusMatch = selectedStatus === "" || bookStatus === selectedStatus;
+
+                                // Display or hide book based on the filter
+                                if (sectionMatch && statusMatch) {
+                                    bookItem.style.display = "block";
+                                } else {
+                                    bookItem.style.display = "none";
+                                }
+                            });
+                        }
+                    </script>
             
             <?php
 
@@ -267,7 +306,7 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
             }
 
             // Number of books to display per page
-            $limit = 4;
+            $limit = 7;
 
             // Get the current page number from the query parameter
             $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
@@ -285,7 +324,6 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
                 echo '<table>';
                 echo '<thead>';
                 echo '<tr>';
-                echo '<th>ISBN</th>';
                 echo '<th>Book Name</th>';
                 echo '<th>Author</th>';
                 echo '<th>Year</th>';
@@ -299,7 +337,6 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
 
                 while ($book = mysqli_fetch_assoc($result)) {
                     echo '<tr>';
-                    echo '<td>' . $book['isbn'] . '</td>';
                     echo '<td>' . $book['book_title'] . '</td>';
                     echo '<td>' . $book['author'] . '</td>';
                     echo '<td>' . $book['year'] . '</td>';
@@ -315,7 +352,7 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
                         echo '<td style="color: grey;"><b><i>' . $book['status'] . '</i></b></td>';
                     }
                     echo '<td>';
-                    echo '<button type="button" class="btn btn-success btn-sm"><i class="fa-solid fa-circle-info fa-sm"></i> Details</button>';
+                    echo '<button type="button" class="btn btn-success btn-sm"><i class="fa-solid fa-circle-info fa-sm"></i> Details</button> &nbsp;';
                     echo '<button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-book fa-sm"></i> Borrow</button>';
                     echo '</td>';
                     echo '</tr>';

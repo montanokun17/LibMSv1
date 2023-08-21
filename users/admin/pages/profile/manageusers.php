@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['enable'])) {
 
     if ($stmt->execute()) {
         // Disable action successful
-        echo "<script>alert('Account enabled successfully.');</script>";
+        echo "<script>alert('Account Disabled successfully.');</script>";
         header ("Location: /LibMSv1/users/admin/pages/profile/manageusers.php");
     } else {
         // Error occurred while disabling the account
@@ -423,9 +423,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
 
                         if ($user['status'] === 'Disabled') {
                             // Account is disabled, display disabled status in red
-                            echo "<td style='color: red;'>Disabled</td>";
+                            echo "<td style='color: red;'><b>Disabled</b></td>";
                         } else {
-                            echo "<td>".$user['status']."</td>";
+                            echo "<td style='color: green;'><b>".$user['status']."</b></td>";
                         }
 
                         echo "<td>";

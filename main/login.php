@@ -46,15 +46,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['id_no'] = $idNo;
 
             // Check the user's account type and redirect accordingly
-            if ($acctype === 'admin') {
+            if ($acctype === 'Admin') {
                 // Redirect to the admin page
                 header('Location: /LibMSv1/users/admin/index.php');
                 exit();
-            } elseif ($acctype === 'student') {
+            } elseif ($acctype === 'Student') {
                 // Redirect to the student page
                 header('Location: /LibMSv1/users/students/index.php');
                 exit();
-            } elseif ($acctype === 'librarian') {
+            } elseif ($acctype === 'Librarian') {
                 // Redirect to the librarian page
                 header('Location: librarian-page.php');
                 exit();
@@ -69,21 +69,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // You may consider hashing the plaintext password here before storing it in the database
 
             // Check the user's account type and redirect accordingly
-            if ($acctype === 'admin') {
+            if ($acctype === 'Admin') {
                 // Redirect to the admin page
                 header('Location: /LibMSv1/users/admin/index.php');
                 exit();
-            } elseif ($acctype === 'student') {
+            } elseif ($acctype === 'Student') {
                 // Redirect to the student page
                 header('Location: /LibMSv1/users/students/index.php');
                 exit();
-            } elseif ($acctype === 'librarian') {
+            } elseif ($acctype === 'Librarian') {
                 // Redirect to the librarian page
                 header('Location: librarian-page.php');
                 exit();
-            } elseif ($acctype === 'staff') {
+            } elseif ($acctype === 'Guset') {
                 // Redirect to the staff page
-                header('Location: staff-page.php');
+                header('Location: guest-page.php');
                 exit();
             }
         } else {
@@ -151,7 +151,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     </div>
 
                                     <div class="container">
-                                        <p>Can't Remember your Password? <a href="/LibMSv1/func/enter_email.php">Forgot Password</a></p>
+                                        <p style=""><i>Can't remember your Password?</i> <a href="/LibMSv1/func/enter_email.php"> Forgot Password</a></p>
+                                    </div>
+
+                                    <div class="container">
+                                        <p style="font-weight: bold; font-size: 13px;"><i>Note: Please Always Remember your Account ID Number</i></p>
                                     </div>
 
                                     <button type="submit" class="btn btn-primary col-md-12">

@@ -10,7 +10,7 @@ CREATE TABLE users (
     firstname VARCHAR(60) NOT NULL,
     lastname VARCHAR(60) NOT NULL,
     password VARCHAR(60) NOT NULL,
-    acctype ENUM("admin", "librarian", "student", "guest") NOT NULL,
+    acctype ENUM("Admin", "Librarian", "Student", "Guest") NOT NULL,
     schlvl ENUM("Elementary", "Junior High School", "Senior High School", "College","Graduated","Guest") NOT NULL,
     brgy ENUM("Bagong Ilog","Bagong Katipunan","Bambang","Buting","Caniogan","Dela Paz","Kalawaan","Kapasigan","Kapitolyo"
     ,"Malinao","Manggahan","Maybunga","Orando","Palatiw","Pinagbuhatan","Pineda","Rosario","Sagad","San Antonio","San Joaquin",

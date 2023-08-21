@@ -266,6 +266,7 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
                             <option value="DILAPITATED">DILAPITATED</option>
                             <option value="LOST">LOST</option>
                         </select>
+                </div>
 
                
             
@@ -273,119 +274,217 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
                     <button type="button" class="btn btn-primary btn-sm"><i class="fa-sharp fa-solid fa-file fa-sm"></i> Generate Report</button>
                     <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-file-export fa-sm"></i> <i class="fa-solid fa-file-excel fa-sm"></i> Export Books Data to Excel</button>
                 </div>
+
+            <div class="book-list" id="bookList">
             
-            <?php
+                <?php
 
-            if (isset($_GET['search'])) {
-                // Get the search query from the input field
-                $searchQuery = $_GET['search'];
+                if (isset($_GET['search'])) {
+                    // Get the search query from the input field
+                    $searchQuery = $_GET['search'];
 
-                // Modify the query to include the search condition
-                $query = "SELECT * FROM books WHERE
-                        ISBN LIKE '%$searchQuery%'
-                        OR book_name LIKE '%$searchQuery%'
-                        OR author LIKE '%$searchQuery%'
-                        OR year LIKE '%$searchQuery%'
-                        OR section LIKE '%$searchQuery%'
-                        OR availability LIKE '%$searchQuery%'";
-            } else {
-                // Default query to fetch all books
-                $query = "SELECT * FROM books ORDER BY book_id DESC";
-            }
+                    // Modify the query to include the search condition
+                    $query = "SELECT * FROM books WHERE isbn LIKE '%$searchQuery%'
+                            OR book_title LIKE '%$searchQuery%'
+                            OR author LIKE '%$searchQuery%'
+                            OR year LIKE '%$searchQuery%'
+                            OR subject LIKE '%$searchQuery%'
+                            OR section LIKE '%$searchQuery%'
+                            OR stocks LIKE '%$searchQuery%'
+                            OR author LIKE '%$searchQuery%'
+                            OR volume LIKE '%$searchQuery%'
+                            OR status LIKE '%$searchQuery%'
+                            ";
+                } else {
+                    // Default query to fetch all books
+                    $query = "SELECT * FROM books ORDER BY book_id DESC";
+                }
 
-            function getBooksByPagination($conn, $query, $offset, $limit) {
-                $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
-                $result = mysqli_query($conn, $query);
+                function getBooksByPagination($conn, $query, $offset, $limit) {
+                    $query .= " LIMIT $limit OFFSET $offset"; // Append the LIMIT and OFFSET to the query for pagination
+                    $result = mysqli_query($conn, $query);
 
-                return $result;
-            }
+                    return $result;
+                }
 
-            $totalBooksQuery = "SELECT COUNT(*) as total FROM books";
-            $totalBooksResult = mysqli_query($conn, $totalBooksQuery);
-            $totalBooks = mysqli_fetch_assoc($totalBooksResult)['total'];
+                $totalBooksQuery = "SELECT COUNT(*) as total FROM books";
+                $totalBooksResult = mysqli_query($conn, $totalBooksQuery);
+                $totalBooks = mysqli_fetch_assoc($totalBooksResult)['total'];
 
-            // Number of books to display per page
-            $limit = 4;
+                // Check if the account type is selected for filtering
+                if (isset($_GET['section']) && !empty($_GET['section'])) {
+                    $acctype = $_GET['section'];
+                    $query .= " AND section = '$section'"; // Add the account type filter condition to the query
+                }
 
-            // Get the current page number from the query parameter
-            $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+                // Check if the status is selected for filtering
+                if (isset($_GET['status']) && !empty($_GET['status'])) {
+                    $status = $_GET['status'];
+                    $query .= " AND status = '$status'"; // Add the status filter condition to the query
+                }
 
-            // Calculate the offset for the current page
-            $offset = ($page - 1) * $limit;
+                // Number of books to display per page
+                $limit = 4;
 
-            // Get the books for the current page
-            $result = getBooksByPagination($conn, $query, $offset, $limit);
+                // Get the current page number from the query parameter
+                $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 
-            // Check if the query executed successfully
-            if ($result && mysqli_num_rows($result) > 0) {
-                echo '<div class="container">';
-                echo '<hr>';
-                echo '<table>';
-                echo '<thead>';
-                echo '<tr>';
-                echo '<th>ISBN</th>';
-                echo '<th>Book Name</th>';
-                echo '<th>Author</th>';
-                echo '<th>Year</th>';
-                echo '<th>Section</th>';
-                echo '<th>Stocks</th>';
-                echo '<th>Status</th>';
-                echo '<th>Action</th>';
-                echo '</tr>';
-                echo '</thead>';
-                echo '<tbody>';
+                // Calculate the offset for the current page
+                $offset = ($page - 1) * $limit;
 
-                while ($book = mysqli_fetch_assoc($result)) {
+                // Get the books for the current page
+                $result = getBooksByPagination($conn, $query, $offset, $limit);
+
+                // Check if the query executed successfully
+                if ($result && mysqli_num_rows($result) > 0) {
+                    echo '<div class="container">';
+                    echo '<hr>';
+                    echo '<table>';
+                    echo '<thead>';
                     echo '<tr>';
-                    echo '<td>' . $book['isbn'] . '</td>';
-                    echo '<td>' . $book['book_title'] . '</td>';
-                    echo '<td>' . $book['author'] . '</td>';
-                    echo '<td>' . $book['year'] . '</td>';
-                    echo '<td>' . $book['section'] . '</td>';
-                    echo '<td>' . $book['stocks'] . '</td>';
-                    if ($book['status'] == 'GOOD') {
-                        echo '<td style="color: green;"><b><i>' . $book['status'] . '</i></b></td>';
-                    } else if ($book['status'] == 'DAMAGED') {
-                        echo '<td style="color: orange;"><b><i>' . $book['status'] . '</i></b></td>';
-                    } else if ($book['status'] == 'DILAPITATED') {
-                        echo '<td style="color: red;"><b><i>' . $book['status'] . '</i></b></td>';
-                    } else {
-                        echo '<td style="color: grey;"><b><i>' . $book['status'] . '</i></b></td>';
-                    }
-                    echo '<td>';
-                    echo '<button type="button" class="btn btn-success btn-sm"><i class="fa-solid fa-circle-info fa-sm"></i> Details</button>';
-                    echo '</td>';
+                    echo '<th>ISBN</th>';
+                    echo '<th>Book Name</th>';
+                    echo '<th>Author</th>';
+                    echo '<th>Year</th>';
+                    echo '<th>Volume</th>';
+                    echo '<th>Section</th>';
+                    echo '<th>Stocks</th>';
+                    echo '<th>Status</th>';
+                    echo '<th>Action</th>';
                     echo '</tr>';
+                    echo '</thead>';
+                    echo '<tbody>';
+
+                    while ($book = mysqli_fetch_assoc($result)) {
+                        echo '<tr>';
+                        echo '<td>' . $book['isbn'] . '</td>';
+                        echo '<td>' . $book['book_title'] . '</td>';
+                        echo '<td>' . $book['author'] . '</td>';
+                        echo '<td>' . $book['year'] . '</td>';
+                        echo '<td>' . $book['volume'] . '</td>';
+                        echo '<td>' . $book['section'] . '</td>';
+                        echo '<td>' . $book['stocks'] . '</td>';
+                        if ($book['status'] == 'GOOD') {
+                            echo '<td style="color: green;"><b><i>' . $book['status'] . '</i></b></td>';
+                        } else if ($book['status'] == 'DAMAGED') {
+                            echo '<td style="color: orange;"><b><i>' . $book['status'] . '</i></b></td>';
+                        } else if ($book['status'] == 'DILAPITATED') {
+                            echo '<td style="color: red;"><b><i>' . $book['status'] . '</i></b></td>';
+                        } else {
+                            echo '<td style="color: grey;"><b><i>' . $book['status'] . '</i></b></td>';
+                        }
+                        echo '<td>';
+                        echo '<button type="button" class="btn btn-success btn-sm"><i class="fa-solid fa-circle-info fa-sm"></i> Details</button>';
+                        echo '</td>';
+                        echo '</tr>';
+                    }
+
+                    echo '</tbody>';
+                    echo '</table>';
+
+
+                    // Calculate the total number of pages
+                    $totalPages = ceil($totalBooks / $limit);
+                    if ($totalPages > 1) {
+                        echo '
+                        <div class="pagination-buttons">
+                            ';
+                
+                        if ($page > 1) {
+                            echo '<a href="?page='.($page - 1).'" class="btn btn-primary btn-sm" id="previous"><i class="fa-solid fa-angle-left"></i> Previous</a>';
+                        }
+                
+                        if ($page < $totalPages) {
+                            echo '<a href="?page='.($page + 1).'" class="btn btn-primary btn-sm" id="next">Next <i class="fa-solid fa-angle-right"></i></a>';
+                        }
+                
+                        echo '
+                        </div>
+                        ';
+                    }
+
+                } else {
+                    echo "<tr><td colspan='10'>No books found.</td></tr>";
                 }
 
-                echo '</tbody>';
-                echo '</table>';
 
+                // Close the database connection
+                mysqli_close($conn);
 
-                // Calculate the total number of pages
-                $totalPages = ceil($totalBooks / $limit);
+                ?>
 
-                if ($totalPages > 1) {
-                    // Display previous and next buttons
-                    echo '<div class="pagination-buttons">';
-                    if ($page > 1) {
-                        echo '<a href="?page=' . ($page - 1) . '" class="btn btn-primary btn-sm" id="previous"><i class="fa-solid fa-angle-left"></i> Previous</a>';
-                    }
-                    if ($page < $totalPages) {
-                        echo '<a href="?page=' . ($page + 1) . '" class="btn btn-primary btn-sm" id="next">Next <i class="fa-solid fa-angle-right"></i></a>';
-                    }
-                    echo '</div>';
-                }
+            </div>
 
-                echo '</div>';
-            } else {
-                echo "<p><b>No books found.</b></p>";
-            }
+            <script>
+                    // JavaScript function for handling pagination buttons
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const previousBtn = document.getElementById("previous");
+                        const nextBtn = document.getElementById("next");
 
-            // Close the database connection
-            mysqli_close($conn);
+                        if (previousBtn) {
+                            previousBtn.addEventListener("click", function () {
+                                // Go to the previous page by decrementing the current page number
+                                let currentPage = parseInt("<?php echo $page; ?>");
+                                if (currentPage > 1) {
+                                    currentPage--;
+                                    window.location.href = "?page=" + currentPage;
+                                }
+                            });
+                        }
 
-            ?>
+                        if (nextBtn) {
+                            nextBtn.addEventListener("click", function () {
+                                // Go to the next page by incrementing the current page number
+                                let currentPage = parseInt("<?php echo $page; ?>");
+                                let totalPages = parseInt("<?php echo $totalPages; ?>");
+                                if (currentPage < totalPages) {
+                                    currentPage++;
+                                    window.location.href = "?page=" + currentPage;
+                                }
+                            });
+                        }
+                    });
+                </script>
+
+                        <script>
+                        // Get references to the select elements
+                        const sectionSelect = document.getElementById("bsection");
+                        const statusSelect = document.getElementById("bstatus");
+                        const bookListContainer = document.getElementById("bookList");
+
+                        // Add event listeners to the select elements
+                        sectionSelect.addEventListener("change", filterBooks);
+                        statusSelect.addEventListener("change", filterBooks);
+
+                        // Initial filtering
+                        filterBooks();
+
+                        function filterBooks() {
+                            // Get selected values
+                            const selectedSection = sectionSelect.value;
+                            const selectedStatus = statusSelect.value;
+
+                            // Get all book items
+                            const bookItems = document.querySelectorAll(".book-item");
+
+                            // Loop through book items and apply filter
+                            bookItems.forEach((bookItem) => {
+                                const bookSection = bookItem.getAttribute("data-section");
+                                const bookStatus = bookItem.getAttribute("data-status");
+
+                                // Check if the book matches the selected criteria
+                                const sectionMatch = selectedSection === "" || bookSection === selectedSection;
+                                const statusMatch = selectedStatus === "" || bookStatus === selectedStatus;
+
+                                // Display or hide book based on the filter
+                                if (sectionMatch && statusMatch) {
+                                    bookItem.style.display = "block";
+                                } else {
+                                    bookItem.style.display = "none";
+                                }
+                            });
+                        }
+                    </script>
 
         </div>
 <!--TABLE END-->

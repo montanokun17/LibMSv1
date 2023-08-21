@@ -15,6 +15,66 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Initialize variables with default values
+$firstname = "";
+$lastname = "";
+$acctype = "";
+$email = "";
+$idNo = "";
+$username = "";
+$con_num = "";
+
+if (isset($_SESSION['acctype']) && $_SESSION['acctype'] === 'Admin') {
+    // User logged in or just registered as a student
+
+    if (isset($_SESSION['id_no']) && isset($_SESSION['username'])) {
+        $idNo = $_SESSION['id_no'];
+        $username = $_SESSION['username'];
+
+        // Prepare and execute the SQL query
+        $query = "SELECT * FROM users WHERE id_no = ? AND username = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("ss", $idNo, $username);
+        $stmt->execute();
+
+        // Fetch the result
+        $result = $stmt->get_result();
+        if ($result->num_rows === 1) {
+            $row = $result->fetch_assoc();
+
+            // Retrieve the user's information
+            $firstname = $row['firstname'];
+            $lastname = $row['lastname'];
+            $acctype = $row['acctype'];
+            $email = $row['email'];
+            $brgy = $row['brgy'];
+            $con_num = $row['con_num'];
+
+            // Update the session variables with fetched data (optional, in case there are changes in the database)
+            $_SESSION['firstname'] = $firstname;
+            $_SESSION['lastname'] = $lastname;
+            $_SESSION['acctype'] = $acctype;
+            $_SESSION['email'] = $email;
+            $_SESSION['brgy'] = $brgy;
+            $_SESSION['con_num'] = $con_num;
+
+        } else {
+            // Handle case when user is not found
+            // For example, redirect to an error page or display an error message
+            echo "User not found!";
+        }
+    } else {
+        // Handle case when session data is missing
+        // For example, redirect to a login page or display an error message
+        echo "Session data missing or user not logged in!";
+    }
+
+} else {
+    // User is not a student or not logged in
+    // Redirect to a login page or display an error message
+    echo "User is not logged in as an admin!";
+}
+
 // Check if the logout parameter is set
 if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
     // Unset all session variables
@@ -78,7 +138,7 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
                 <a class="nav-link" href="/LibMSv1/users/admin/pages/database/database.php"><i class="fa-solid fa-database fa-sm"></i> Database</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/LibMSv1/users/admin/index.php"><i class="fa-solid fa-rotate-left fa-sm"></i> Go Back</a>
+                <a class="nav-link" href="/LibMSv1/users/admin/pages/qrpages/qrpage.php"><i class="fa-solid fa-rotate-left fa-sm"></i> Go Back</a>
               </li>
             </ul>
             
@@ -241,15 +301,15 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
                             </label>
                             <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
                         </div>
-                        <h5 class="mt-2" id="user-name">John Doe</h5>
-                        <p class="text-muted mb-1" id="user-role">Librarian</p>
+                        <h5 class="mt-2" id="user-name"><?php echo $firstname . ' ' . $lastname; ?></h5>
+                        <p class="text-muted mb-1" id="user-role"><?php echo $acctype; ?></p>
                     </div>
                     <hr>
                     <div>
-                        <p class="mb-1">Username: <span id="username">johndoe</span></p>
-                        <p class="mb-1">Email: <span id="email">johndoe@example.com</span></p>
-                        <p class="mb-1">Phone: <span id="phone">+1 123-456-7890</span></p>
-                        <p class="mb-1">Address: <span id="address">123 Main Street, City</span></p>
+                        <p class="mb-1">Username: <span id="username"><?php echo $username; ?></span></p>
+                        <p class="mb-1">Email: <span id="email"><?php echo $email;?></span></p>
+                        <p class="mb-1">Phone: <span id="phone"><?php echo $con_num; ?></span></p>
+                        <p class="mb-1">Barangay: <span id="address"><?php echo"";?></span></p>
                     </div>
                     <div class="text-center">
                         <div class="qr-code" id="qr-code"></div>

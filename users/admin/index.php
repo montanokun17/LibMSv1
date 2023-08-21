@@ -24,7 +24,7 @@ $idNo = "";
 $username = "";
 $con_num = "";
 
-if ($_SESSION['acctype'] === 'admin') {
+if ($_SESSION['acctype'] === 'Admin') {
 
     $idNo = $_SESSION['id_no'];
     $username = $_SESSION['username'];

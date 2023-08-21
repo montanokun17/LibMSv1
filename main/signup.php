@@ -61,20 +61,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['username'] = $username;
 
             // Redirect to appropriate page based on the user's account type
-            if ($acctype === 'admin') {
+            if ($acctype === 'Admin') {
                 // Redirect to the admin page
                 header('Location: /LibMSv1/users/admin/index.php');
                 exit();
-            } elseif ($acctype === 'student') {
+            } elseif ($acctype === 'Student') {
                 header('Location: /LibMSv1/users/students/index.php');
                 exit();
-            } elseif ($acctype === 'librarian') {
+            } elseif ($acctype === 'Librarian') {
                 // Redirect to the librarian page
                 header('Location: librarian-page.php');
                 exit();
-            } elseif ($acctype === 'guest') {
+            } elseif ($acctype === 'Guest') {
                 // Redirect the user to the student portal after successful registration
-                header('Location: /LibMSv1/users/students/index.php');
+                header('Location: guest-page.php');
                 exit();
             }
         } else {
@@ -133,9 +133,9 @@ $conn->close();
                                             <label for="acctype">Account Type: </label>
                                                 <select name="acctype" class="form-select" id="acctype">
                                                     <option selected disabled>Select Account Type</option>
-                                                    <option value="student">Student</option>
-                                                    <option value="librarian">Librarian</option>
-                                                    <option value="guest">Guest</option>
+                                                    <option value="Student">Student</option>
+                                                    <option value="Librarian">Librarian</option>
+                                                    <option value="Guest">Guest</option>
                                                 </select>
 
                                             
@@ -192,7 +192,7 @@ $conn->close();
                                                 var schlvl = document.getElementById("schlvl");
 
                                                 acctype.addEventListener("change", function() {
-                                                if (acctype.value === "librarian" || acctype.value === "guest") {
+                                                if (acctype.value === "Librarian" || acctype.value === "Guest") {
                                                     schlvl.disabled = true;
                                                     schlvl.selectedIndex = 0; // clears the selection of the schlvl dropdown
                                                 } else {
@@ -201,6 +201,10 @@ $conn->close();
                                                 });
 
                                                 </script>
+
+                                            <div class="container">
+                                                <p style="font-weight: bold; font-size: 13px;"><i>Note: Please Remember your Account ID Number</i></p>
+                                            </div>
 
                                             <div class="send-button">
                                                 <button type="submit" class="btn btn-primary col-md-12"><i class="fa-solid fa-user-plus"></i> Create Account</button>
