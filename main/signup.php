@@ -134,7 +134,6 @@ $conn->close();
                                                 <select name="acctype" class="form-select" id="acctype">
                                                     <option selected disabled>Select Account Type</option>
                                                     <option value="Student">Student</option>
-                                                    <option value="Librarian">Librarian</option>
                                                     <option value="Guest">Guest</option>
                                                 </select>
 

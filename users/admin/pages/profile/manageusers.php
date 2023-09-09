@@ -475,10 +475,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
                             ';
                 
                         if ($page > 1) {
-                            echo '<a href="?page='.($page - 1).'" class="btn btn-primary btn-sm" id="previous"><i class="fa-solid fa-angle-left"></i> Previous</a>';
+                            echo '<a href="?page='.($page - 1).'" class="btn btn-primary btn-sm" id="previous"><i class="fa-solid fa-angle-left"></i> Previous</a>&nbsp;';
+                            echo '<a href="?page='.($page + 1).'" class="btn btn-primary btn-sm" id="next">Next <i class="fa-solid fa-angle-right"></i></a>';
                         }
                 
                         if ($page < $totalPages) {
+                            
                             echo '<a href="?page='.($page + 1).'" class="btn btn-primary btn-sm" id="next">Next <i class="fa-solid fa-angle-right"></i></a>';
                         }
                 

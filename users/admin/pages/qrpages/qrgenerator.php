@@ -68,7 +68,7 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="LibMSv1/users/admin/index.php"><i class="fa-solid fa-user fa-xs"></i> Profile Card</a>
+                <a class="nav-link" aria-current="page" href="/LibMSv1/users/admin/index.php"><i class="fa-solid fa-user fa-xs"></i> Profile Card</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/LibMSv1/users/admin/pages/profile/manageusers.php"></i><i class="fa-solid fa-users fa-xs"></i> Accounts</a>
@@ -249,6 +249,13 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
                                             <br>
                                             <input type="text" name="username" id="username" required><br>
                                         </div>
+
+                                        <div class="form-group">
+                                            <label for="username">Name:</label>
+                                            <br>
+                                            <input type="text" name="name" id="name" required><br>
+                                        </div>
+
 
                                         <br>
 

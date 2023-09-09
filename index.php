@@ -123,6 +123,7 @@
               </div>
             </div>
           </div>
+          <!---
         <div class="custom_carousel-control">
           <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
             <span class="sr-only">Previous</span>
@@ -130,7 +131,7 @@
           <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
             <span class="sr-only">Next</span>
           </a>
-        </div>
+        </div>-->
       </div>
     </section>
     <!-- end slider section -->
@@ -149,15 +150,12 @@
               </h2>
             </div>
             <p>
-              Library, traditionally, collection of books used for reading or study, or the building or room in which such 
-              a collection is kept. The word derives from the Latin liber, “book,” whereas a Latinized Greek word, bibliotheca, 
-              is the origin of the word for library in German, Russian, and the Romance languages. From their historical beginnings 
-              as places to keep the business, legal, historical, and religious records of a civilization, libraries have emerged 
-              since the middle of the 20th century as a far-reaching body of information resources and services that do not even 
-              require a building. Rapid developments in computers, telecommunications, and other technologies have made it possible 
-              to store and retrieve information in many different forms and from any place with a computer and a telephone connection. 
-              The terms digital library and virtual library have begun to be used to refer to the vast collections of information 
-              to which people gain access over the Internet, cable television, or some other type of remote electronic connection.
+              Pasig City Hall Library has a collection of over 2,000 books, serials, images, and 
+              documents relating to Pasig City history. Pasig City library has been an essential provider 
+              of free books, information, ideas, and education for all Pasigueños for more than 5 years. 
+              Founded in 2018, PCHL (PASIG CITY HALL LIBRARY) promotes access to information, as well as 
+              spaces for discussion and collaborations, bringing together an extraordinary richness of 
+              resources and opportunities available to all.
             </p>
             <a href="">
               Get Started

@@ -7,7 +7,8 @@ if (isset($_POST['generate'])) {
     // Get user input data
     $idNo = $_POST['idNo'];
     $username = $_POST['username'];
-    $data = "ID Number: $idNo\nUsername: $username";
+    $name = $_POST['name'];
+    $data = "ID Number: $idNo\nUsername: $username\nName: $name";
 
     // Generate the QR code
     $tempDir = '/LibMSv1/users/admin/qrbin/qrcode.png'; // Change this to a writable temp directory
